@@ -21,6 +21,41 @@ h1, h2, h3 {
   height: 100%;
 }
 
+
+busTimeLine{
+	stroke:black;
+	stroke-width:2px;
+  fill: none;
+}
+currentTimeLine{
+	stroke:black;
+	stroke-width:2px;
+  fill: none;
+}
+lowTrafficLine{
+	stroke:black;
+	stroke-width:2px;
+  fill: none;
+}
+
+.busLaneCSS{
+	stroke: rgb(28,15,212);
+	stroke-width: 1px;
+	fill: none;
+}
+
+.currentTimeCSS{
+	stroke: rgb(183,220,255);
+	stroke-width: 1px;
+	fill: none;
+}
+
+.lowTrafficCSS{
+	stroke: rgb(104,150,255);
+	stroke-width: 1px;
+	fill: none;
+}
+
 /* Fork on GitHub ribbon via https://codepo8.github.io/css-fork-on-github-ribbon/# */  
 #forkongithub a{
 	background:#00F;
