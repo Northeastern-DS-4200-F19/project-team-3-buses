@@ -101,6 +101,58 @@ lineChartGroup.append('path')
   .attr('d', lowTrafficLine(data))
   .attr('class', 'lowTrafficCSS');
 
+var presentDay = new Date();
+var presentTime =  presentDay.toLocaleString('en-US', { hour: 'numeric', hour12: true })
+
+  
+var lineBrush = d3.brushX()
+    .extent([[-lineXScale.step() / 2,0], [width-margin.left-margin.right+lineXScale.step() / 2, height-margin.bottom-margin.top/2]])
+    .on('end', lineBrushEnded);
+	
+
+lineChartGroup.append('g')
+	.attr("class","brush")
+	.call(lineBrush)
+	.call(lineBrush.move,[
+        lineXScale(presentTime)-lineXScale.step()/2,
+        lineXScale(presentTime)+lineXScale.step()/2
+      ]);
+
+
+function invertPoint(selection) {
+    var xPos = selection;
+	if (selection == width-margin.right-margin.left){
+		return "1 AM"
+	}
+    var domain = lineXScale.domain(); 
+    var range = lineXScale.range();
+    var rangePoints = d3.range(range[0], range[1], lineXScale.step())
+    var yPos = domain[d3.bisectRight(rangePoints, xPos) -1];
+    return yPos;
+}
+
+  function lineBrushEnded() {
+    const selection = d3.event.selection;
+    if (!d3.event.sourceEvent || !selection) return;
+    const range = lineXScale.domain().map(lineXScale), dx = lineXScale.step()/2;
+    const x0 = range[d3.bisectRight(range, selection[0])] - dx;
+    const x1 = range[d3.bisectRight(range, selection[1]) - 1] + dx;
+    d3.select(this).transition().call(d3.event.target.move, x1 > x0 ? [x0, x1] : null);
+	console.log(invertPoint((x1+x0)/2))
+	//update between stops plot
+  }
+  
+    d3.selectAll('.brush>.handle').remove();
+    d3.selectAll('.brush>.overlay').remove();
+	d3.selectAll('.overlay').style('pointer-events', 'none');
+
+svg.on("click",function(){
+	var coords = d3.mouse(this);
+	console.log(coords)
+	xcoord = coords[0]-margin.left;
+
+lineChartGroup.select('.brush').call(lineBrush.move, [xcoord-lineXScale.step()/2, xcoord+lineXScale.step()/2]).call(lineBrushEnded);})
+
 
  }
 }
