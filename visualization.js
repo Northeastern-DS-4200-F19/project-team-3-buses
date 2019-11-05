@@ -142,19 +142,16 @@ function invertPoint(selection) {
 	//update between stops plot
   }
   
-
-
     d3.selectAll('.brush>.handle').remove();
     d3.selectAll('.brush>.overlay').remove();
 	d3.selectAll('.overlay').style('pointer-events', 'none');
 
-// svg.on("click",function(){
-	// var coords = d3.mouse(this);
-	// console.log(coords)
-	// xcoord = coords[0];
-	// ycoord = coords[1];
+svg.on("click",function(){
+	var coords = d3.mouse(this);
+	console.log(coords)
+	xcoord = coords[0]-margin.left;
 
-// lineChartGroup.select('.brush').call(lineBrush.move, xcoord).call(lineBrushEnded);})
+lineChartGroup.select('.brush').call(lineBrush.move, [xcoord-lineXScale.step()/2, xcoord+lineXScale.step()/2]).call(lineBrushEnded);})
 
 
  }
