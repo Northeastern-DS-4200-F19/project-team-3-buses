@@ -159,3 +159,216 @@ lineChartGroup.select('.brush').call(lineBrush.move, [xcoord-lineXScale.step()/2
 
 JD_stuff()
 
+function TT_stuff(){
+
+var width = 600;
+var height = 400;
+
+var svg = d3.select("#mapid").append("svg").attr("width", width).attr("height", height);
+
+var mymap = L.map('mapid', {
+    center: [42.3601, -71.0589],
+    zoom: 13
+});
+
+L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+    maxZoom: 18,
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+        '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    id: 'mapbox.streets'
+}).addTo(mymap);
+
+L.circle([42.329544, -71.083982], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.330957, -71.082754], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+
+L.circle([42.332324, -71.081252], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.332016, -71.079576], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.331591, -71.076237], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.333825, -71.073541], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.334948,-71.074931], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.336621,-71.076956], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.339459,-71.080362], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.340606,-71.081617], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.34157,-71.083092], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.342303,-71.084121], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.345331,-71.086739], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.348005,-71.088033], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.350773,-71.089334], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.359183,-71.093543], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.360758,-71.095722], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.362988,-71.099486], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.365291,-71.103404], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.366837,-71.106017], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+
+L.circle([42.36839,-71.108618], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.369265,-71.110773], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.37027,-71.112998], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.372099,-71.115371], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.373259,-71.118124], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([42.375131,71.118511], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+
+L.circle([,], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5,
+    radius: 10
+}).addTo(mymap);
+}
+
+TT_stuff()
