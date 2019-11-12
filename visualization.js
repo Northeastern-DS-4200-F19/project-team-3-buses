@@ -213,7 +213,6 @@ function invertPoint(selection) {
 }
 
 JD_stuff()
-
 function AP_stuff(){
 var svg = d3.select("svg"),
         margin = {top: 350, right: 20, bottom: 30, left: 40},
@@ -657,21 +656,4 @@ L.circle([42.375131,71.118511], {
     fillOpacity: 0.5,
     radius: 10
 }).addTo(mymap);
-
- L.circle([,], {
-     color: 'red',
-     fillColor: '#f03',
-    fillOpacity: 0.5,
-     radius: 10
- }).addTo(mymap);
-}
-
-TT_stuff()
-
-		
-
-
-
-
-
 
