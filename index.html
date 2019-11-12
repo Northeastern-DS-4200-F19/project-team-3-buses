@@ -25,6 +25,12 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-config" content="/favicons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+   <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"
+   integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
+   crossorigin=""></script>
 	</head>
   
   <!-- Main page content -->
@@ -45,10 +51,7 @@
       
       <h1>Motivation</h1>
       
-      <p><em>Summary of user needs and motivating questions.</em></p>
-      
-      <p><em>Expectation: There is a clear focus, and a developed explanation of the problem, and a reasonable response is proposed.</em></p>
-
+      <p>Our project aims to clearly measure and show the possible benefits of removing all of the possible delays from the bus route through the Chester Square Neighborhood. This project hopes to give the MBTA good reasons for why improvements in the bus routes are needed, as well as informing the residents of the neighborhood about how their daily lives would be affected. With these goals in mind, we hope to be able to ensure that all stakeholders of possible bus route improvements are informed about the reasons why an improvement project is necessary. One main goal is to specifically help the Chester Square Neighborhood Association convince other neighborhood associations to partner up to push for a bus improvement project. This will be accomplished through a series of interactive visualizations that focus on three different scenarios. The main focus will be on how a separate bus lane throughout Route 1 will have the most benefit for the project stakeholders.</p>
       
       <h1>Visualization</h1>
       
@@ -64,7 +67,8 @@
       
       <!-- Don't delete the closing tag! -->
       </svg>
-      <div id="mapid" style="width: 600px; height: 400px;"></div>
+    <div id="mapid" style="width: 600px; height: 400px;"></div>
+
     </div>
     
     <!-- Your writeup goes here -->
@@ -90,9 +94,7 @@
 
       <h1>Task Analysis</h1>
 
-      <p><em>Summary of task table.</em></p>
-
-      <p><em>Expectation: Clearly describes domain tasks, processes, goals and abstract tasks for domain problems.</em></p>
+	  <p> The primary function of our visualization is to allow users to discover more about the Route 1 bus, and its possible improvements. Our main goal was to show the predicted benefits of a "reliable" bus, by showing comparisons between different trasffic scenarios. Furthermore, we wanted to be able to have these visualizations be customizable, to allow users to select their own commutes on Route 1, and directly see the impact of a reliable bus personally. </p>
 
       <h1>Design Process</h1>
       
@@ -117,7 +119,7 @@
       <ul>
         <li><a href="https://d3js.org/">D3: Data-Driven Documents</a> by Mike Bostock.</li>
         <li><a href="https://codepo8.github.io/css-fork-on-github-ribbon/#">Pure CSS responsive "Fork me on GitHub" ribbon</a> by Chris Heilmann</li>
-		<li><a href="https://observablehq.com/@d3/ordinal-brushing">Ordinal Snap Brushing</a> by Chris Heilmann</li>
+		<li><a href="https://observablehq.com/@d3/ordinal-brushing">Ordinal Snap Brushing</a> by Mike Bostock</li>
 	  </ul>
       
     </div>
@@ -125,5 +127,7 @@
     <!-- Scripts at the end avoid need for dealing with async, defer, or onload event handlers -->
     <script src="lib/d3.v5.12.0/d3.min.js"></script>
     <script src="visualization.js"></script>
+	<script src="lib/leaflet/leaflet.js"></script>
+
 	</body>
 </html>
