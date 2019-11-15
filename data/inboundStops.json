@@ -1,0 +1,145 @@
+{
+  "data": [
+    {
+        "name": "Massachusetts Ave @ Holyoke St",
+        "latitude": "42.373259",
+        "longitude": "-71.118124",
+    },
+    {
+        "name": "Massachusetts Ave @ Johnston Gate",
+        "latitude": "42.375131",
+        "longitude": "-71.118511",
+    },
+    {
+        "name": "Quincy St @ Broadway opp Fogg Museum",
+        "latitude": "42.374685",
+        "longitude": "-71.11457",
+    },
+    {
+        "name": "Quincy St @ Harvard St",
+        "latitude": "42.372401",
+        "longitude": "-71.115202",
+    },
+    {
+        "name": "Mt Auburn St @ DeWolfe St",
+        "latitude": "42.370925",
+        "longitude": "-71.11597",
+    },
+    {
+        "name": "Mt Auburn St @ Putnam Ave",
+        "latitude": "42.370044",
+        "longitude": "-71.113514",
+    },
+    {
+        "name": "Massachusetts Ave @ Bay St",
+        "latitude": "42.368951",
+        "longitude": "-71.110427",
+    },
+    {
+        "name": "Massachusetts Ave @ Hancock St",
+        "latitude": "42.36835",
+        "longitude": "-71.108936",
+    },
+    {
+        "name": "Massachusetts Ave @ Pleasant St",
+        "latitude": "42.366717",
+        "longitude": "-71.106102",
+    },
+    {
+        "name": "Massachusetts Ave @ Pearl St",
+        "latitude": "42.364915",
+        "longitude": "-71.103074",
+    },
+    {
+        "name": "Massachusetts Ave @ Sidney St",
+        "latitude": "42.362804",
+        "longitude": "-71.099509",
+    },
+    {
+        "name": "Massachusetts Ave @ Albany St",
+        "latitude": "42.360708",
+        "longitude": "-71.096014",
+    },
+    {
+        "name": "84 Massachusetts Ave",
+        "latitude": "42.358941",
+        "longitude": "-71.09363",
+    },
+    {
+        "name": "Massachusetts Ave @ Marlborough St",
+        "latitude": "42.34995",
+        "longitude": "-71.089148",
+    },
+    {
+        "name": "Massachusetts Ave @ Newbury St",
+        "latitude": "42.347937",
+        "longitude": "-71.088146",
+    },
+    {
+        "name": "Massachusetts Ave opp Christian Science Ctr",
+        "latitude": "42.344366",
+        "longitude": "-71.086458",
+    },
+    {
+        "name": "Massachusetts Ave @ Huntington Ave",
+        "latitude": "42.342478",
+        "longitude": "-71.084701",
+    },
+    {
+        "name": "Massachusetts Ave @ Massachusetts Ave Station",
+        "latitude": "42.341553",
+        "longitude": "-71.083328",
+    },
+    {
+        "name": "Massachusetts Ave @ Columbus Ave",
+        "latitude": "42.340624",
+        "longitude": "-71.081947",
+    },
+    {
+        "name": "Massachusetts Ave @ Tremont St",
+        "latitude": "42.339074",
+        "longitude": "-71.080299",
+    },
+    {
+        "name": "Massachusetts Ave @ Washington St",
+        "latitude": "42.336295",
+        "longitude": "-71.076941",
+    },
+    {
+        "name": "Massachusetts Ave @ Harrison Ave",
+        "latitude": "42.334748",
+        "longitude": "-71.07511",
+    },
+    {
+        "name": "Massachusetts Ave @ Albany St",
+        "latitude": "42.333539",
+        "longitude": "-71.073689",
+    },
+    {
+      "attributes": {
+        "name": "Albany St @ Randall St",
+        "latitude": "42.331675",
+        "longitude": "-71.076347",
+    },
+    {
+        "name": "Melnea Cass Blvd @ Harrison Ave",
+        "latitude": "42.332066",
+        "longitude": "-71.079147",
+    },
+    {
+        "name": "Washington St @ Williams St",
+        "latitude": "42.332045",
+        "longitude": "-71.081738",
+    },
+    {
+        "name": "Washington St @ Ruggles St",
+        "latitude": "42.331035",
+        "longitude": "-71.082875",
+    },
+    {
+        "name": "Dudley Square",
+        "latitude": "42.329544",
+        "longitude": "-71.083982",
+    }
+  ]
+}
