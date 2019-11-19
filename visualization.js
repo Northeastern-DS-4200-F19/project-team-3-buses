@@ -44,7 +44,7 @@ var margin = {
 
 var color = d3.scaleOrdinal().range([d3.rgb(183,220,255),d3.rgb(104,150,255),d3.rgb(28,15,212)]);
 
-var svg = d3.select('#RTH-svg').attr("i0",0).attr("i1",0);
+var svg = d3.select('#main-svg').attr("i0",0).attr("i1",0);
 
 // Start group	
 var lineChartGroup = svg
@@ -204,8 +204,8 @@ function invertPoint(selection) {
 	d3.select("#BSH-svg").html(null);	
 	time = formatTime(parseSingle(invertPoint((x1+x0)/2)))
 	
-	i0 = d3.select('#RTH-svg').attr("i0");
-	i1 = d3.select('#RTH-svg').attr("i1");
+	i0 = d3.select('#main-svg').attr("i0");
+	i1 = d3.select('#main-svg').attr("i1");
 	
 	AP_stuff(max,data2.filter(function(d){return d.time == time;}), time,i0,i1);
   }
@@ -414,12 +414,12 @@ function brushed() {
       circles.attr("fill", (d, i) => i0 <= i && i < i1 ? "orange" : "white");
 	  circles.attr("brushed", (d, i) => i0 <= i && i < i1 ? "true" : "false");
       svg.property("value", x.domain().slice(i0, i1)).dispatch("brushed");
-	  d3.select('#RTH-svg').attr("i0",x.domain().slice(i0, i1)[0]).attr("i1",x.domain().slice(i0, i1)[x.domain().slice(i0, i1).length-1]);
+	  d3.select('#main-svg').attr("i0",x.domain().slice(i0, i1)[0]).attr("i1",x.domain().slice(i0, i1)[x.domain().slice(i0, i1).length-1]);
     } else {
       circles.attr("fill", "white");
 	  circles.attr("brushed", "false");
       svg.property("value", []).dispatch("brushed");
-	  d3.select('#RTH-svg').attr("i0",0).attr("i1",0);
+	  d3.select('#main-svg').attr("i0",0).attr("i1",0);
     }
 	makeSumText(x.domain().slice(i0,i1));
   }
@@ -598,27 +598,6 @@ function TT_stuff() {
 
     var index = 24;
 
-    var graphPoints = svg.selectAll("circle")
-      .data(d)
-      .enter()
-      .append("circle")
-      .attr("r", 7)
-      .attr("cx", mapPointX)
-      .attr("cy", mapPointY)
-      .attr("fill", "white")
-      .attr("stroke", "black")
-      .attr("id", function(){
-        var holder = index--;
-        return holder;
-      });
-
-    svg.selectAll("circle")
-      .on('mouseover', function (d) {
-        d3.select(this).attr("fill", "orange")
-      })
-      .on('mouseleave', function (d) {
-        d3.select(this).attr("fill", "white")
-      });
 
     svg.call(d3.brush()
       .extent([[0, 0], [width, height]])
@@ -642,12 +621,17 @@ function TT_stuff() {
         if (isBrushed(selected, mapPointX(d), mapPointY(d))) {
           if (!brushedStops.has(this.id)){
             brushedStops.add(this.id);
+			d3.select(this).attr("brushed","true");
+			d3.select(this).attr("fill","orange");
           }
         }
 
         if (!isBrushed(selected, mapPointX(d), mapPointY(d))) {
           if (brushedStops.has(this.id)){
             brushedStops.remove(this.id);
+			d3.select(this).attr("brushed","false");
+			d3.select(this).attr("fill","white");
+
           }
         }
         return isBrushed(selected, mapPointX(d), mapPointY(d))
@@ -658,7 +642,34 @@ function TT_stuff() {
     function isBrushed(area, x, y) {
       return area[0][0] <= x && area[1][0] >= x && area[0][1] <= y && area[1][1] >= y;
     }
+	
+	
+	    var graphPoints = svg.selectAll("circle")
+      .data(d)
+      .enter()
+      .append("circle")
+      .attr("r", 7)
+      .attr("cx", mapPointX)
+      .attr("cy", mapPointY)
+      .attr("fill", "white")
+      .attr("stroke", "black")
+      .attr("id", function(){
+        var holder = index--;
+        return holder;
+      }).raise();
+	
+	  svg.selectAll("circle")
+	.attr('brushed', 'false')
+	.on('mouseover', function () {
+		d3.select(this).attr("fill","orange");})
+    .on('mouseout', function (d) {
+		var brushed = d3.select(this).attr("brushed");
+		if(brushed == "true"){d3.select(this).attr("fill","orange");}
+		else{d3.select(this).attr("fill","white");}});
   })
+  
+  
+  
 }
 
 

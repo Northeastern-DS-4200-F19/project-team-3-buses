@@ -57,17 +57,17 @@
     </div>
     
     <!-- Your visualization here -->
-    <div class="vis-holder1">
+    <div class = "vis-holder">
       <!-- Change viewbox to whatever you want, e.g. "0 0 1000 6000" This determines your aspect ratio and coordinate system -->    
       <!-- Delete all the sample SVG code below after the viewbox to before the closing tag. Populate this part of the SVG with D3. -->
-	 <svg id="RTH-svg" viewBox="0 0 1750 1000">
-		<foreignobject x=1050 y="0" width="800" height="750">
-			<div id="mapid" style="width: 800px; height: 750px;"></div>
-		</foreignobject>
-		<svg id="BSH-svg" y = "225"></svg>
-	 </svg>
-	</div>
-
+	  <div class="svgs">
+			<svg id="main-svg" viewBox="0 0 1750 1000">
+				<svg id="BSH-svg" y = "225"></svg>
+			</svg>
+		</div>
+	 
+	 <div id="mapid" style="width: 800px; height: 750px;"></div>
+ </div>
     
     <!-- Your writeup goes here -->
     <div class = "content-column">
