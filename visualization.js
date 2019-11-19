@@ -412,12 +412,12 @@ function brushed() {
       var i0 = d3.bisectRight(range, selection[0]);
       var i1 = d3.bisectRight(range, selection[1])+1;
       circles.attr("fill", (d, i) => i0 <= i && i < i1 ? "orange" : "white");
-	  circles.attr("brushed", (d, i) => i0 <= i && i < i1 ? "true" : "false");
+	  circles.attr("selectedPoint", (d, i) => i0 <= i && i < i1 ? "true" : "false");
       svg.property("value", x.domain().slice(i0, i1)).dispatch("brushed");
 	  d3.select('#main-svg').attr("i0",x.domain().slice(i0, i1)[0]).attr("i1",x.domain().slice(i0, i1)[x.domain().slice(i0, i1).length-1]);
     } else {
       circles.attr("fill", "white");
-	  circles.attr("brushed", "false");
+	  circles.attr("selectedPoint", "false");
       svg.property("value", []).dispatch("brushed");
 	  d3.select('#main-svg').attr("i0",0).attr("i1",0);
     }
@@ -522,8 +522,8 @@ function brushended() {
 	.on('mouseover', function () {
 		d3.select(this).attr("fill","orange");})
     .on('mouseout', function (d) {
-		var brushed = d3.select(this).attr("brushed");
-		if(brushed == "true"){d3.select(this).attr("fill","orange");}
+		var brushed = d3.select(this).attr("selectedPoint");
+		if(brushed == true){d3.select(this).attr("fill","orange");}
 		else{d3.select(this).attr("fill","white");}});
 		
 	svg.append("g")
@@ -621,7 +621,7 @@ function TT_stuff() {
         if (isBrushed(selected, mapPointX(d), mapPointY(d))) {
           if (!brushedStops.has(this.id)){
             brushedStops.add(this.id);
-			d3.select(this).attr("brushed","true");
+			d3.select(this).attr("selectedPoint","true");
 			d3.select(this).attr("fill","orange");
           }
         }
@@ -629,7 +629,7 @@ function TT_stuff() {
         if (!isBrushed(selected, mapPointX(d), mapPointY(d))) {
           if (brushedStops.has(this.id)){
             brushedStops.remove(this.id);
-			d3.select(this).attr("brushed","false");
+			d3.select(this).attr("selectedPoint","false");
 			d3.select(this).attr("fill","white");
 
           }
@@ -663,8 +663,8 @@ function TT_stuff() {
 	.on('mouseover', function () {
 		d3.select(this).attr("fill","orange");})
     .on('mouseout', function (d) {
-		var brushed = d3.select(this).attr("brushed");
-		if(brushed == "true"){d3.select(this).attr("fill","orange");}
+		var brushed = d3.select(this).attr("selectedPoint");
+		if(brushed == true){d3.select(this).attr("fill","orange");}
 		else{d3.select(this).attr("fill","white");}});
   })
   
