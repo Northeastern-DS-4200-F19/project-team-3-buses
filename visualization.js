@@ -44,7 +44,7 @@ var margin = {
 
 var color = d3.scaleOrdinal().range([d3.rgb(183,220,255),d3.rgb(104,150,255),d3.rgb(28,15,212)]);
 
-var svg = d3.select('#RTH-svg');
+var svg = d3.select('#RTH-svg').attr("i0",0).attr("i1",0);
 
 // Start group	
 var lineChartGroup = svg
@@ -105,7 +105,7 @@ lineChartGroup.append("text")
         .attr("y", 0 - (margin.top / 2))
         .attr("text-anchor", "middle")  
         .style("font-size", "16px") 
-        .style("text-decoration", "underline")  
+        .style("font-weight", "bold")  
         .text("Total Travel Times Between All Outbound Route 1 Bus Stops")
 		.attr("pointer-events", "none");
  
@@ -139,7 +139,7 @@ lineChartGroup.append('path')
 // Get Default Hour
 var presentDay = new Date();
 var presentTime =  presentDay.toLocaleString('en-US', { hour: 'numeric', hour12: true })
-if (Number(presentTime.split(" ")[0]) > 1 && presentTime.split(" ")[0] < 5)
+if (Number(presentTime.split(" ")[0]) > 1 && Number(presentTime.split(" ")[0]) < 5 && presentTime.split(" ")[1] == "AM")
 {
 	presentTime = "5 AM"
 }
@@ -173,7 +173,7 @@ var filtered_data2 = data2.filter(function(d){return d.Stop2 != "";});
 var max = d3.max(filtered_data2, function(d){return Math.max(d.buslane, d.lowtraffic, d.current);});
 
 
-AP_stuff(max,data2.filter(function(d){return d.time == formatTime(parseSingle(presentTime));}), formatTime(parseSingle(presentTime)));
+AP_stuff(max,data2.filter(function(d){return d.time == formatTime(parseSingle(presentTime));}), formatTime(parseSingle(presentTime)),0,0);
 
 
 lineChartGroup.on("mousedown",function(){
@@ -203,7 +203,11 @@ function invertPoint(selection) {
     d3.select(this).transition().call(d3.event.target.move, x1 > x0 ? [x0, x1] : null);
 	d3.select("#BSH-svg").html(null);	
 	time = formatTime(parseSingle(invertPoint((x1+x0)/2)))
-	AP_stuff(max,data2.filter(function(d){return d.time == time;}), time);
+	
+	i0 = d3.select('#RTH-svg').attr("i0");
+	i1 = d3.select('#RTH-svg').attr("i1");
+	
+	AP_stuff(max,data2.filter(function(d){return d.time == time;}), time,i0,i1);
   }
   
     svg.selectAll('.brush>.handle').remove();
@@ -214,18 +218,18 @@ function invertPoint(selection) {
 
 // Set up Legend
 
-  var legend = svg.selectAll('.legend')
-      .data(["Current", "Low Traffic", "Bus Lane"])
+  var legend = lineChartGroup.selectAll('.legend')
+      .data(["Normal Traffic", "Low Traffic", "Added Bus-Only Lane"])
       .enter()
 	  .append('g')
       .attr('class', 'legend')
 	  .attr("transform", function(d, i) {
-      return "translate(" + (width/2+margin.left/5-Math.abs((100)*(i-1)*(i-2))-Math.abs((i)*(122)*(i-2))-Math.abs((i)*(i-1)*(10))) + ",0)";
+      return "translate(" + (width/2-margin.left-10-Math.abs((125)*(i-1)*(i-2))-Math.abs((i)*(122)*(i-2))-Math.abs((i)*(i-1)*(10))) + ",0)";
     });
     
   legend.append('rect')
       .attr('x', function(d, i){ return (i *  10)+margin.left;})
-      .attr('y', margin.top-15)
+      .attr('y', -15)
       .attr('width', 10)
       .attr('height', 10)
       .style('fill', color);
@@ -233,7 +237,7 @@ function invertPoint(selection) {
       
   legend.append('text')
       .attr('x', function(d, i){ return (i *  10)+margin.left+15;})
-      .attr('y', margin.top-5)
+      .attr('y',-5)
       .text(function(d){ return d; });
 
  
@@ -241,8 +245,8 @@ function invertPoint(selection) {
 
 JD_stuff()
 
-function AP_stuff(max,data,time){
-	
+function AP_stuff(max,data,time,i0,i1){
+		
 var svg = d3.select("#BSH-svg"),
         margin = {top: 50, right: 20, bottom: 100, left: 40},
         width = 1000 - margin.left - margin.right,
@@ -250,18 +254,22 @@ var svg = d3.select("#BSH-svg"),
 		margin2 = {
 		top: 0,
 		bottom: 50,
-		left: 47,
+		left: 40,
 		right: 0
 		}
 		width2 = 1000
 		height2 = 100
 		
-g = svg.append("g").attr("transform", "translate(" + (margin.left) + "," + margin.top + ")");
+	g = svg.append("g").attr("transform", "translate(" + (margin.left) + "," + margin.top + ")");
+
+	tickData = data.map(function(d){return d.Stop1});
+
 
     // The scale spacing the groups:
     var x0 = d3.scaleBand()
         .rangeRound([(margin.left-22), width])
         .paddingInner(0.1);
+
 
 
     // The scale for spacing each group's bar:
@@ -277,7 +285,7 @@ g = svg.append("g").attr("transform", "translate(" + (margin.left) + "," + margi
 
         var keys = ["current","lowtraffic","buslane"];
 
-        x0.domain(data.map(function(d) { return d.Stop1; }));
+        x0.domain(data.map(function(d) { return d.sort; }));
         x1.domain(keys).rangeRound([0, x0.bandwidth()]);
         y.domain([0, max]).nice();
 
@@ -285,13 +293,15 @@ g = svg.append("g").attr("transform", "translate(" + (margin.left) + "," + margi
         g.append("g")
             .attr("class", "axis")
             .attr("transform", "translate(-19," + (height) + ")")
-            .call(d3.axisBottom(x0).tickSizeOuter(0))
+            .call(d3.axisBottom(x0).tickSizeOuter(0).tickFormat(function (d,i) {return tickData[i];}))
 			.selectAll("text")
 			.attr("y", 0)
-			.attr("x", -10)
+			.attr("x", 15)
 			.attr("dy", ".35em")
-			.attr("transform", "rotate(-90)")
-			.style("text-anchor", "end");
+			.attr("transform", "rotate(45)")
+			.style("text-anchor", "start")
+			.attr("pointer-events", "none");
+
 
 
         g.append("g")
@@ -310,17 +320,19 @@ g = svg.append("g").attr("transform", "translate(" + (margin.left) + "," + margi
             .attr("x",0 - (height) / 2)
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text("Travel Time (sec)");
+            .text("Travel Time (sec)")
+			.attr("pointer-events", "none");
 
         g.append("g")
             .selectAll("g")
             .data(data)
             .enter().append("g")
             .attr("class","bar")
-            .attr("transform", function(d) { return "translate(" + x0(d.Stop1) + ",0)"; })
+            .attr("transform", function(d) { return "translate(" + x0(d.sort) + ",0)"; })
             .selectAll("rect")
             .data(function(d) { return keys.map(function(key) { return {key: key, value: d[key]}; }); })
             .enter().append("rect")
+			.attr("pointer-events", "none")
             .attr("x", function(d) { return x1(d.key); })
             .attr("y", function(d) { return y(0); })
             .attr("width", x1.bandwidth())
@@ -334,6 +346,7 @@ g = svg.append("g").attr("transform", "translate(" + (margin.left) + "," + margi
 			.duration(500)
 			.attr("y", function(d) { return y(d.value); })
 			.attr("height", function(d) { return height - y(d.value); });
+			
 		
 		// Title
 		g.append("text")
@@ -341,7 +354,7 @@ g = svg.append("g").attr("transform", "translate(" + (margin.left) + "," + margi
         .attr("y", 0 - (11/20)*margin.top)
         .attr("text-anchor", "middle")  
         .style("font-size", "16px") 
-        .style("text-decoration", "underline")  
+        .style("font-weight", "bold")  
         .text("Travel Times Between Outbound Route 1 Bus Stops at " + time);
 
 
@@ -351,12 +364,12 @@ var color = d3.scaleOrdinal().range([d3.rgb(183,220,255),d3.rgb(104,150,255),d3.
 
 
   var legend = svg.selectAll('.legend')
-      .data(["Current", "Low Traffic", "Bus Lane"])
+      .data(["Normal Traffic", "Low Traffic", "Added Bus-Only Lane"])
       .enter()
 	  .append('g')
       .attr('class', 'legend')
 	  .attr("transform", function(d, i) {
-      return "translate(" + (width/2+margin.left-Math.abs((100)*(i-1)*(i-2))-Math.abs((i)*(122)*(i-2))-Math.abs((i)*(i-1)*(10))) + ","+(-margin.top/6)+")";
+      return "translate(" + (width/2+margin.left/2-Math.abs((125)*(i-1)*(i-2))-Math.abs((i)*(122)*(i-2))-Math.abs((i)*(i-1)*(10))) + ","+(-margin.top/6)+")";
     });
     
   legend.append('rect')
@@ -373,7 +386,7 @@ var color = d3.scaleOrdinal().range([d3.rgb(183,220,255),d3.rgb(104,150,255),d3.
       .text(function(d){ return d; });
 			
 x = d3.scalePoint()
-    .domain(d3.range(0,24,1))
+    .domain(d3.range(0,25,1))
     .range([margin2.left+x0.bandwidth()/2, width2-margin2.left+x0.bandwidth()/2+6])
 	.padding(0.5);
 
@@ -392,11 +405,6 @@ var line = svg.append("g")
     .attr("stroke-width", 4);
   
 
-svg.append("g")
-	.attr("stroke","none")
-	.style("opacity", ".5")
-    .call(brush);
-
 function brushed() {
     var selection = d3.event.selection;
     if (selection) {
@@ -406,10 +414,12 @@ function brushed() {
       circles.attr("fill", (d, i) => i0 <= i && i < i1 ? "orange" : "white");
 	  circles.attr("brushed", (d, i) => i0 <= i && i < i1 ? "true" : "false");
       svg.property("value", x.domain().slice(i0, i1)).dispatch("brushed");
+	  d3.select('#RTH-svg').attr("i0",x.domain().slice(i0, i1)[0]).attr("i1",x.domain().slice(i0, i1)[x.domain().slice(i0, i1).length-1]);
     } else {
       circles.attr("fill", "white");
 	  circles.attr("brushed", "false");
       svg.property("value", []).dispatch("brushed");
+	  d3.select('#RTH-svg').attr("i0",0).attr("i1",0);
     }
 	makeSumText(x.domain().slice(i0,i1));
   }
@@ -432,11 +442,11 @@ function brushended() {
 	g.append("text").attr("id","lowtraffic_sum")
 	g.append("text").attr("id","buslane_sum")
   
- makeSumText(d3.range(0,24,1));
+ makeSumText(d3.range(0,25,1));
 
   
   function makeSumText(data_slice){
-	 var selected_stops = data.filter(function(d){return d.sort >= data_slice[0]+1 && d.sort <= data_slice[data_slice.length-1]+1});
+	 var selected_stops = data.filter(function(d){return d.sort >= data_slice[0] && d.sort <= data_slice[data_slice.length-1]});
 	 var current_sum = Math.round(100*d3.sum(selected_stops,function(d){return d.current})/60)/100;
 	 var lowtraffic_sum = Math.round(100*d3.sum(selected_stops,function(d){return d.lowtraffic})/60)/100;
 	 var buslane_sum = Math.round(100*d3.sum(selected_stops,function(d){return d.buslane})/60)/100;
@@ -448,14 +458,14 @@ function brushended() {
 	buslane_sum = 0;
 	}
 			 
-	 if (data_slice.length == 24)
+	 if (data_slice.length == 25)
 	 {
         d3.select("#sum_title")
 		.attr("x", width/4)             
         .attr("y", margin.top)
         .attr("text-anchor", "middle")  
         .style("font-size", "16px")
-		.text("Total Time Between All Outbound Stops: ");
+		.text("Sum of Times Between All Outbound Stops: ").attr("pointer-events", "none");
 	 }
 	 else
 	 {
@@ -464,7 +474,7 @@ function brushended() {
         .attr("y", margin.top)
         .attr("text-anchor", "middle")  
         .style("font-size", "16px")
-		.text("Total Time Between Selected Outbound Stops: ");
+		.text("Sum of Times Between Selected Outbound Stops: ").attr("pointer-events", "none");
 	 }	
 	 
 		d3.select("#current_sum")
@@ -472,10 +482,10 @@ function brushended() {
         .attr("y", margin.top+16)
         .attr("text-anchor", "middle")  
         .style("font-size", "14px")
-		.text("Current: "+ current_sum+" mins")
+		.text("Current: "+ current_sum+" mins").attr("pointer-events", "none")
 		.attr("font-weight","bold")
-		.attr("stroke", "grey")
-		.attr("stroke-width", ".3px")
+		.attr("stroke", "black")
+		.attr("stroke-width", ".35px")
 		.attr("fill","#b7dcff");
 		
 		d3.select("#lowtraffic_sum")
@@ -483,7 +493,7 @@ function brushended() {
         .attr("y", margin.top+32)
         .attr("text-anchor", "middle")  
         .style("font-size", "14px")
-		.text("Low Traffic: " + lowtraffic_sum + " mins")	
+		.text("Low Traffic: " + lowtraffic_sum + " mins").attr("pointer-events", "none")	
 		.attr("font-weight","bold")
 		.attr("fill","#6896eb");
 
@@ -492,12 +502,11 @@ function brushended() {
         .attr("y", margin.top+48)
         .attr("text-anchor", "middle")  
         .style("font-size", "14px")
-		.text("Bus Lane: " + buslane_sum + " mins")
+		.text("Bus Lane: " + buslane_sum + " mins").attr("pointer-events", "none")
 		.attr("font-weight","bold")
-		.attr("fill","#1c0fd4");
-	 
+		.attr("fill","#1c0fd4"); 
   }
-    
+
   
   var circles = svg.append("g")
 	.selectAll("circle")
@@ -527,8 +536,21 @@ function brushended() {
 		//.attr("x", d => x(d))
 		//.attr("dy", "0.35em")
 		//.text(d => d);;
-   
-  
+		
+if (i0==0 && i1==0){
+	svg.append("g")
+	.attr("stroke","none")
+	.style("opacity", ".5")
+    .call(brush).lower();
+}
+else{
+	svg.append("g")
+	.attr("stroke","none")
+	.style("opacity", ".5")
+    .call(brush)
+	.call(brush.move, [x(i0)-x.step()/2,x(i1)-x.step()/2]).lower();
+}
+
   
 };
 				  
@@ -542,7 +564,7 @@ function TT_stuff() {
   var mymap = L.map('mapid', {
     center: [42.3501, -71.0889],
     zoom: 14,
-	zoomControl: false
+    zoomControl: false
   });
 
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -556,68 +578,93 @@ function TT_stuff() {
   mymap.touchZoom.disable();
   mymap.doubleClickZoom.disable();
   mymap.scrollWheelZoom.disable();
-
   mymap.dragging.disable();
 
   var svg = d3.select(mymap.getPanes().overlayPane).append("svg").attr("width", width).attr("height", height);
-  var g = svg.append("g").attr("class", "leaflet-zoom-hide");
 
   d3.json("data/outboundStops.json").then(function (d) {
 
-    d.forEach(function (d) {
+    function mapPointX(d) {
       d.LatLng = new L.LatLng(d.latitude, d.longitude)
-      d.stopName = d.name;
-      console.log(d.stopName);
-    });
+      var x = mymap.latLngToLayerPoint(d.LatLng).x;
+      return x;
+    };
 
-    var tip = d3.select("#mapid")
-      .append("div")
-      .attr("class", "tooltip")
-      .style("opacity", 0);
+    function mapPointY(d) {
+      d.LatLng = new L.LatLng(d.latitude, d.longitude)
+      var y = mymap.latLngToLayerPoint(d.LatLng).y;
+      return y;
+    };
 
-    var graphPoints = g.selectAll("circle")
+    var index = 24;
+
+    var graphPoints = svg.selectAll("circle")
       .data(d)
       .enter()
       .append("circle")
-      .attr("r", 6)
-	  .attr("fill","white")
+      .attr("r", 7)
+      .attr("cx", mapPointX)
+      .attr("cy", mapPointY)
+      .attr("fill", "white")
       .attr("stroke", "black")
-      .on('mouseover', function () {
-        d3.select(this).attr("fill", "#FF8C3F")
-        console.log(g.stopName);
-      }).on('mouseout', function (d) {
-        var brushed = d3.select(this).attr("brushed");
-        if (brushed == "true") {
-          d3.select(this).attr("fill", "#FF8C3F")
-          // tool tip of stop name
-          /*tip.html(d.stopName)
-            .style("left", (d3.event.pageX) + "px")
-            .style("top", (d3.event.pageY - 28) + "px")
-            .addTo(mymap)*/
-        } else { d3.select(this).attr("fill", "white"); }
+      .attr("id", function(){
+        var holder = index--;
+        return holder;
       });
 
-    // for each - mouse over - display
+    svg.selectAll("circle")
+      .on('mouseover', function (d) {
+        d3.select(this).attr("fill", "orange")
+      })
+      .on('mouseleave', function (d) {
+        d3.select(this).attr("fill", "white")
+      });
 
-    function update() {
-      graphPoints.attr("transform",
-        function (d) {
-          return "translate(" +
-            mymap.latLngToLayerPoint(d.LatLng).x + "," +
-            mymap.latLngToLayerPoint(d.LatLng).y + ")";
+    svg.call(d3.brush()
+      .extent([[0, 0], [width, height]])
+      .on("start brush", brushed));
+
+    /*d3.line()
+      .x(function (d) { return mapPointX(d); })
+      .y(function (d) { return mapPointY(d); });
+
+    graphPoints.selectAll("circle")
+      .data(d)
+      .enter()
+      .append("path")
+      .attr("stroke", "orange");*/
+
+      var index = 0;
+
+    function brushed() {
+      var selected = d3.event.selection;
+      graphPoints.classed("selectedPoint", function (d) {
+        if (isBrushed(selected, mapPointX(d), mapPointY(d))) {
+          if (!brushedStops.has(this.id)){
+            brushedStops.add(this.id);
+          }
         }
-      )
+
+        if (!isBrushed(selected, mapPointX(d), mapPointY(d))) {
+          if (brushedStops.has(this.id)){
+            brushedStops.remove(this.id);
+          }
+        }
+        return isBrushed(selected, mapPointX(d), mapPointY(d))
+      }
+      );
     }
 
-    update();
-
+    function isBrushed(area, x, y) {
+      return area[0][0] <= x && area[1][0] >= x && area[0][1] <= y && area[1][1] >= y;
+    }
   })
-
 }
 
 
 TT_stuff();
-	
+var brushedStops = d3.set();
+
 
 
 

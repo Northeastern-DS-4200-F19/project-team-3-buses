@@ -60,11 +60,11 @@
     <div class="vis-holder1">
       <!-- Change viewbox to whatever you want, e.g. "0 0 1000 6000" This determines your aspect ratio and coordinate system -->    
       <!-- Delete all the sample SVG code below after the viewbox to before the closing tag. Populate this part of the SVG with D3. -->
-	  <svg id="RTH-svg" viewBox="0 0 1750 1000">
-	  <foreignobject x=1000 y="0" width="800" height="800">
-	 <div id="mapid" style="width: 800px; height: 800px;"></div>
-	 </foreignobject>
-	<svg id="BSH-svg" y = "225"></svg>
+	 <svg id="RTH-svg" viewBox="0 0 1750 1000">
+		<foreignobject x=1050 y="0" width="800" height="750">
+			<div id="mapid" style="width: 800px; height: 750px;"></div>
+		</foreignobject>
+		<svg id="BSH-svg" y = "225"></svg>
 	 </svg>
 	</div>
 
@@ -93,13 +93,13 @@
 
       <h1>Data Analysis</h1>
 	  
-	     <p><em>Expectation: Data sources match the problem statement and are appropriate. These descriptions should be very explicit so someone could read your page and properly reproduce your results.</em></p>
+	  <p><em>Expectation: Data sources match the problem statement and are appropriate. These descriptions should be very explicit so someone could read your page and properly reproduce your results.</em></p>
 		 
-		<p>We used two main spreadsheets as sources for our data. This first spreadsheet is called the "On Time Performance" sheet. The On Time Performance spreadsheet generally describes the on-time performance of different bus routes over time. We focused on the average on-time performance (or the average amount of times the bus worked on-time) of the bus route. 
+	  <p>We used two main spreadsheets as sources for our data. This first spreadsheet is called the "On Time Performance" sheet. The On Time Performance spreadsheet generally describes the on-time performance of different bus routes over time. We focused on the average on-time performance (or the average amount of times the bus worked on-time) of the bus route. 
 
-		The second spreadsheet is called the "Segment Level Delay Analysis" spreadsheet. The Segment Level Delay Analysis spreadsheet describes different run time data for the bus at different stops, such as the median run time and delays the bus faces. This data was collected through statistical measurements and a dedicated study.
+	  The second spreadsheet is called the "Segment Level Delay Analysis" spreadsheet. The Segment Level Delay Analysis spreadsheet describes different run time data for the bus at different stops, such as the median run time and delays the bus faces. This data was collected through statistical measurements and a dedicated study.
 
-		The “Segment Level Delay Analysis” spreadsheet uses categorical, categorical, categorical, ordinal, quantitative, quantitative, quantitative, quantitative, quantitative, quantitative, quantitative, categorical, and ordinal data types. The “Ontime Performance” spreadsheet uses quantitative, quantitative, categorical, categorical, categorical, categorical, ordinal, categorical, categorical, quantitative, quantitative, and quantitative data. </p>
+	  The “Segment Level Delay Analysis” spreadsheet uses categorical, categorical, categorical, ordinal, quantitative, quantitative, quantitative, quantitative, quantitative, quantitative, quantitative, categorical, and ordinal data types. The “Ontime Performance” spreadsheet uses quantitative, quantitative, categorical, categorical, categorical, categorical, ordinal, categorical, categorical, quantitative, quantitative, and quantitative data. </p>
 
    
 
@@ -115,9 +115,9 @@
       Logical discussion of design choices grounded in theory from course.
       Discusses feedback from usability testing.</em></p>
 
-		<p>After exploring our data and thinking about the task analysis and user needs, out design process started with three sketches from each group member. These sketches varied greatly, but we found that our favorites were straightforward designs that clearly showed the benefit of the bus lane. We also agreed that a map of some sort with the route and bus stops shown was necessary for our final visualization.
+	  <p>After exploring our data and thinking about the task analysis and user needs, out design process started with three sketches from each group member. These sketches varied greatly, but we found that our favorites were straightforward designs that clearly showed the benefit of the bus lane. We also agreed that a map of some sort with the route and bus stops shown was necessary for our final visualization.
 
-		We then moved onto combining our ideas into a prototype interactive design. This is where we decided on incorporating a map, a grouped bar chart, and a line chart. After receiving feedback, we decided to change our color scheme to increase the clarity of our designs and improve the aesthetics. We also ensured that our designs would be clear if they were in black and white, and that colors could still be differentiated by the color blind. Further feedback from a user allowed us to refine our approach to emphasize the benefits that would come specifically from the bus lane.</p>
+	  We then moved onto combining our ideas into a prototype interactive design. This is where we decided on incorporating a map, a grouped bar chart, and a line chart. After receiving feedback, we decided to change our color scheme to increase the clarity of our designs and improve the aesthetics. We also ensured that our designs would be clear if they were in black and white, and that colors could still be differentiated by the color blind. Further feedback from a user allowed us to refine our approach to emphasize the benefits that would come specifically from the bus lane.</p>
 
 
       <h1>Conclusion</h1>
@@ -126,8 +126,7 @@
       
       <p><em>Expectation: Meaningfully wraps up project and has good future directions.</em></p>
 		
-		<p>Overall, we have created three distinct visualizations that all work in conjunction to clearly outline the benefits for bus riders if a bus lane was put in along Route 1. Currently, we only have data for northbound riders, so including southbound data and a toggle switch for the map could be introduced to improve the usefulness of the visualizations. In the future, more data can always be collected to keep the visualization up to date if levels of traffic within the city change drastically. The visualization can also be updated with other bus routes to allow a user to see possible benefits to public transportation throughout the city.
-</p>
+	  <p>Overall, we have created three distinct visualizations that all work in conjunction to clearly outline the benefits for bus riders if a bus lane was put in along Route 1. Currently, we only have data for northbound riders, so including southbound data and a toggle switch for the map could be introduced to improve the usefulness of the visualizations. In the future, more data can always be collected to keep the visualization up to date if levels of traffic within the city change drastically. The visualization can also be updated with other bus routes to allow a user to see possible benefits to public transportation throughout the city.</p>
       
       <h1>Acknowledgements</h1>
 
@@ -136,8 +135,8 @@
       <ul>
         <li><a href="https://d3js.org/">D3: Data-Driven Documents</a> by Mike Bostock.</li>
         <li><a href="https://codepo8.github.io/css-fork-on-github-ribbon/#">Pure CSS responsive "Fork me on GitHub" ribbon</a> by Chris Heilmann</li>
-	<li><a href="https://observablehq.com/@d3/ordinal-brushing">Ordinal Snap Brushing</a> by Mike Bostock</li>
-	<li><a href="https://observablehq.com/@d3/grouped-bar-chart">Grouped Bar Chart</a> by Mike Bostock</li>
+		<li><a href="https://observablehq.com/@d3/ordinal-brushing">Ordinal Snap Brushing</a> by Mike Bostock</li>
+		<li><a href="https://observablehq.com/@d3/grouped-bar-chart">Grouped Bar Chart</a> by Mike Bostock</li>
 
      </ul>
       
