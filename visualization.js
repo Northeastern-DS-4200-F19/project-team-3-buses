@@ -436,7 +436,6 @@ function brushEnd(){
 	g.append("text").attr("id","lowtraffic_sum")
 	g.append("text").attr("id","buslane_sum")
   
- makeSumText(d3.range(0,25,1));
 
   
   function makeSumText(data_slice){
@@ -544,6 +543,7 @@ function brushEnd(){
        brushedStops.values().map(Number).includes(d)
 	);
 
+makeSumText(svg.selectAll(".selectedPoint").data());
 
 	dispatcher.on("selectionUpdatedMap",function(selected_ids){ 
 		circles.classed("selectedPoint",d => 
