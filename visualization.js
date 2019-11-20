@@ -42,9 +42,10 @@ var margin = {
   right: 50
 };
 
+
 var color = d3.scaleOrdinal().range([d3.rgb(183,220,255),d3.rgb(104,150,255),d3.rgb(28,15,212)]);
 
-var svg = d3.select('#main-svg').attr("i0",0).attr("i1",0);
+var svg = d3.select('#main-svg');
 
 // Start group	
 var lineChartGroup = svg
@@ -203,11 +204,8 @@ function invertPoint(selection) {
     d3.select(this).transition().call(d3.event.target.move, x1 > x0 ? [x0, x1] : null);
 	d3.select("#BSH-svg").html(null);	
 	time = formatTime(parseSingle(invertPoint((x1+x0)/2)))
-	
-	i0 = d3.select('#main-svg').attr("i0");
-	i1 = d3.select('#main-svg').attr("i1");
-	
-	AP_stuff(max,data2.filter(function(d){return d.time == time;}), time,i0,i1);
+
+	AP_stuff(max,data2.filter(function(d){return d.time == time;}), time)
   }
   
     svg.selectAll('.brush>.handle').remove();
@@ -243,10 +241,10 @@ function invertPoint(selection) {
  
 })};
 
-JD_stuff()
-
-function AP_stuff(max,data,time,i0,i1){
-		
+function AP_stuff(max,data,time){
+	
+	
+	
 var svg = d3.select("#BSH-svg"),
         margin = {top: 50, right: 20, bottom: 100, left: 40},
         width = 1000 - margin.left - margin.right,
@@ -260,7 +258,7 @@ var svg = d3.select("#BSH-svg"),
 		width2 = 1000
 		height2 = 100
 		
-	g = svg.append("g").attr("transform", "translate(" + (margin.left) + "," + margin.top + ")");
+	g = svg.append("g").attr("transform", "translate(" + (margin.left) + "," + margin.top + ")").on('mousedown', function(){circles.classed("selectedPoint",false).attr("fill","white")});
 
 	tickData = data.map(function(d){return d.Stop1});
 
@@ -393,8 +391,9 @@ x = d3.scalePoint()
 var brush = d3.brushX()
 	.extent([[margin2.left,margin.top],[width2-margin2.left-margin2.right, height+margin.top+3]])
     .on("start brush end", brushed)
-    .on("end.snap", brushended);
-
+    //.on("end.snap", brushended);
+	.on("end", brushEnd);
+	
 var line = svg.append("g")
     .append("line")
     .style("stroke", "black")
@@ -407,35 +406,30 @@ var line = svg.append("g")
 
 function brushed() {
     var selection = d3.event.selection;
-    if (selection) {
-      var range = x.domain().map(x);
-      var i0 = d3.bisectRight(range, selection[0]);
-      var i1 = d3.bisectRight(range, selection[1])+1;
-      circles.attr("fill", (d, i) => i0 <= i && i < i1 ? "orange" : "white");
-	  circles.attr("selectedPoint", (d, i) => i0 <= i && i < i1 ? "true" : "false");
-      svg.property("value", x.domain().slice(i0, i1)).dispatch("brushed");
-	  d3.select('#main-svg').attr("i0",x.domain().slice(i0, i1)[0]).attr("i1",x.domain().slice(i0, i1)[x.domain().slice(i0, i1).length-1]);
-    } else {
-      circles.attr("fill", "white");
-	  circles.attr("selectedPoint", "false");
-      svg.property("value", []).dispatch("brushed");
-	  d3.select('#main-svg').attr("i0",0).attr("i1",0);
-    }
-	makeSumText(x.domain().slice(i0,i1));
+	
+	 if (d3.event.selection === null) return;
+        const [a0, a1] = d3.event.selection;
+		console.log([a0,a1])
+
+        // If within the bounds of the brush, select it
+        circles.classed("selectedPoint", d =>
+          a0 <= x(d)-x.step()/2 && x(d)-x.step()/2 <= a1
+		);
+				
+		brushedStops = d3.set(svg.selectAll(".selectedPoint").data());
+				
+	dispatcher.call("selectionUpdatedBar", this, svg.selectAll(".selectedPoint").data());
+		
+	
+	makeSumText(svg.selectAll(".selectedPoint").data());
   }
 
-
-
-function brushended() {
-    var selection = d3.event.selection;
-    if (!d3.event.sourceEvent || !selection) return;
-	if (selection[1]-selection[0] < x.step()/2){ d3.select(this).call(brush.move, null); return;}
-    var range = x.domain().map(x), dx = x.step()/2;
-    var x0 = range[d3.bisectRight(range, selection[0])]-dx;
-    var x1 = range[d3.bisectRight(range, selection[1])-1]+dx;
-    d3.select(this).transition().call(brush.move, x1 > x0 ? [x0, x1] : null);
-  }
-  
+function brushEnd(){
+        // We don't want infinite recursion
+        if(d3.event.sourceEvent.type!="end"){
+          d3.select(this).call(brush.move, null);
+        }         
+      }
   
   	g.append("text").attr("id","sum_title")
 	g.append("text").attr("id","current_sum")
@@ -446,7 +440,7 @@ function brushended() {
 
   
   function makeSumText(data_slice){
-	 var selected_stops = data.filter(function(d){return d.sort >= data_slice[0] && d.sort <= data_slice[data_slice.length-1]});
+	 var selected_stops = data.filter(function(d){return data_slice.includes(d.sort)&&data_slice.includes(d.sort+1)});
 	 var current_sum = Math.round(100*d3.sum(selected_stops,function(d){return d.current})/60)/100;
 	 var lowtraffic_sum = Math.round(100*d3.sum(selected_stops,function(d){return d.lowtraffic})/60)/100;
 	 var buslane_sum = Math.round(100*d3.sum(selected_stops,function(d){return d.buslane})/60)/100;
@@ -518,51 +512,55 @@ function brushended() {
     .attr("r", x.step()/5)
 	.attr("fill","white")
     .attr("stroke", "black")
-	.attr('brushed', 'false')
-	.on('mouseover', function () {
-		d3.select(this).attr("fill","orange");})
-    .on('mouseout', function (d) {
-		var brushed = d3.select(this).attr("selectedPoint");
-		if(brushed == true){d3.select(this).attr("fill","orange");}
-		else{d3.select(this).attr("fill","white");}});
+	.attr("sort", d => x.domain()[d])
+	  .on('mouseover', function () {
+		d3.select(this).classed("mouseover",true);
+		var x = d3.select(this).data();
+	   d3.select("[id='" + x + "']").classed("mouseover", true);})
+	  .on('mouseout', function (d) {
+		d3.select(this).classed("mouseover",false);
+		var x = d3.select(this).data();
+		d3.select("[id='" + x + "']").classed("mouseover", false);});
 		
+	console.log()
+	
 	svg.append("g")
 		.attr("font-family", "var(--sans-serif)")
 		.attr("text-anchor", "middle")
 		.attr("transform", `translate(${x.step() / 2},${height / 2})`)
 		.selectAll("text")
 		.data(x.domain());
-		//.join("text")
-		//.attr("x", d => x(d))
-		//.attr("dy", "0.35em")
-		//.text(d => d);;
+
 		
-if (i0==0 && i1==0){
 	svg.append("g")
 	.attr("stroke","none")
 	.style("opacity", ".5")
     .call(brush).lower();
-}
-else{
-	svg.append("g")
-	.attr("stroke","none")
-	.style("opacity", ".5")
-    .call(brush)
-	.call(brush.move, [x(i0)-x.step()/2,x(i1)-x.step()/2]).lower();
-}
 
-  
-};
-				  
 
+	console.log(brushedStops.values().map(Number))
+	
+    circles.classed("selectedPoint", d =>
+       brushedStops.values().map(Number).includes(d)
+	);
+
+
+	dispatcher.on("selectionUpdatedMap",function(selected_ids){ 
+		circles.classed("selectedPoint",d => 
+			selected_ids.includes(d)
+		)			
+		makeSumText(selected_ids)
+		})
+}
 
 function TT_stuff() {
+
 
   var width = 1000;
   var height = 1000;
 
   var mymap = L.map('mapid', {
-    center: [42.3501, -71.0889],
+    center: [42.3516, -71.0969],
     zoom: 14,
     zoomControl: false
   });
@@ -596,12 +594,15 @@ function TT_stuff() {
       return y;
     };
 
-    var index = 24;
 
 
-    svg.call(d3.brush()
-      .extent([[0, 0], [width, height]])
-      .on("start brush", brushed));
+
+
+	var mapBrush = d3.brush()
+      .extent([[0, 0], [width, height]]).on("start brush", brushed)
+	  .on("end", brushEnd);
+
+    svg.append("g").call(mapBrush);
 
     /*d3.line()
       .x(function (d) { return mapPointX(d); })
@@ -613,16 +614,14 @@ function TT_stuff() {
       .append("path")
       .attr("stroke", "orange");*/
 
-      var index = 0;
-
-    function brushed() {
-      var selected = d3.event.selection;
+function brushed() {
+      var selected = d3.event.selection;	  
       graphPoints.classed("selectedPoint", function (d) {
         if (isBrushed(selected, mapPointX(d), mapPointY(d))) {
           if (!brushedStops.has(this.id)){
             brushedStops.add(this.id);
 			d3.select(this).attr("selectedPoint","true");
-			d3.select(this).attr("fill","orange");
+			//d3.select(this).attr("fill","orange");
           }
         }
 
@@ -630,52 +629,68 @@ function TT_stuff() {
           if (brushedStops.has(this.id)){
             brushedStops.remove(this.id);
 			d3.select(this).attr("selectedPoint","false");
-			d3.select(this).attr("fill","white");
 
           }
         }
         return isBrushed(selected, mapPointX(d), mapPointY(d))
       }
       );
+	  dispatcher.call("selectionUpdatedMap",this,brushedStops.values().map(Number));
     }
 
     function isBrushed(area, x, y) {
       return area[0][0] <= x && area[1][0] >= x && area[0][1] <= y && area[1][1] >= y;
     }
+
+	 
+	  
+    
+
+	function brushEnd(){
+        // We don't want infinite recursion
+        if(d3.event.sourceEvent.type!="end"){
+          d3.select(this).call(mapBrush.move, null);
+        }         
+      }
+
 	
 	
-	    var graphPoints = svg.selectAll("circle")
+	 var graphPoints = svg.selectAll("circle")
       .data(d)
       .enter()
       .append("circle")
+	  .attr("id", d => d.id)
       .attr("r", 7)
       .attr("cx", mapPointX)
       .attr("cy", mapPointY)
       .attr("fill", "white")
       .attr("stroke", "black")
-      .attr("id", function(){
-        var holder = index--;
-        return holder;
-      }).raise();
+	  .on('mouseover', function () {
+		d3.select(this).classed("mouseover",true)
+		var x = d3.select(this).data().map(d => d.id);
+		console.log(x)
+		d3.selectAll("[sort='" + x + "']").classed("mouseover", true);})
+	  .on('mouseout', function (d) {
+		d3.select(this).classed("mouseover",false)
+		var x = d3.select(this).data().map(d => d.id);
+		d3.selectAll("[sort='" + x + "']").classed("mouseover", false);})
+	 .on('mousedown', function(){graphPoints.classed("selectedPoint",false).attr("fill","white")})
+      .raise();
 	
-	  svg.selectAll("circle")
-	.attr('brushed', 'false')
-	.on('mouseover', function () {
-		d3.select(this).attr("fill","orange");})
-    .on('mouseout', function (d) {
-		var brushed = d3.select(this).attr("selectedPoint");
-		if(brushed == true){d3.select(this).attr("fill","orange");}
-		else{d3.select(this).attr("fill","white");}});
+	
+	dispatcher.on("selectionUpdatedBar",function(selected_ids){ 
+		graphPoints.classed("selectedPoint",d => 
+			selected_ids.includes(parseInt(d.id,10))
+		)})
+		
+	
   })
-  
-  
-  
 }
 
 
-TT_stuff();
+JD_stuff();
+
+TT_stuff()
 var brushedStops = d3.set();
 
-
-
-
+var dispatcher = d3.dispatch("selectionUpdatedMap", "selectionUpdatedBar");
