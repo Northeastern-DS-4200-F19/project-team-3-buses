@@ -69,6 +69,13 @@ lowTrafficLine{
 	fill: none;
 }
 
+.line {
+    fill: none;
+    stroke: rgb(28,15,212);
+    stroke-width: 3;
+}
+
+
 /* Fork on GitHub ribbon via https://codepo8.github.io/css-fork-on-github-ribbon/# */  
 #forkongithub a{
 	background:#00F;
@@ -124,9 +131,4 @@ lowTrafficLine{
 		-o-transform:rotate(45deg);
 		box-shadow:4px 4px 10px rgba(0,0,0,0.8);
 	}
-}
-
-#mapid {height: 400px; 
-	width: 600px;
-	flex: 1;
 }
