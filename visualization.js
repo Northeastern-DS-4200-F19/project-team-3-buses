@@ -660,7 +660,7 @@ function TT_stuff() {
       .attr('fill', '#b7dcff')*/
 
     svg.append('rect')
-      .attr('x', 120)
+      .attr('x', 80)
       .attr('y', 525)
       .attr('width', 210)
       .attr('height', 20)
@@ -669,8 +669,9 @@ function TT_stuff() {
 
     var nameDisplay = svg.append('text')
 	  .attr("id","nameDisplay")
-      .attr('x', 125)
+      .attr('x', 185)
       .attr('y', 540)
+      .style("text-anchor", "middle")
       .style("font-size", 12);
 
     var graphPoints = svg.selectAll("circle")
