@@ -474,7 +474,7 @@ function AP_stuff(max, data, time) {
       .attr("y", margin.top + 16)
       .attr("text-anchor", "middle")
       .style("font-size", "14px")
-      .text("Current: " + current_sum + " mins").attr("pointer-events", "none")
+      .text("Normal Traffic: " + current_sum + " mins").attr("pointer-events", "none")
       .attr("font-weight", "bold")
       .attr("stroke", "black")
       .attr("stroke-width", ".35px")
