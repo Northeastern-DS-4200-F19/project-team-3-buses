@@ -224,20 +224,20 @@ function JD_stuff() {
         .attr('class', 'legend')
         .attr("transform", function (d, i) {
           return "translate(" + (width / 2 - margin.left - 10 - Math.abs((125) * (i - 1) * (i - 2)) - Math.abs((i) * (122) * (i - 2)) - Math.abs((i) * (i - 1) * (10))) + ",0)";
-        });
+        }).attr("pointer-events", "none");
 
       legend.append('rect')
         .attr('x', function (d, i) { return (i * 10) + margin.left; })
         .attr('y', -15)
         .attr('width', 10)
         .attr('height', 10)
-        .style('fill', color);
+        .style('fill', color).attr("pointer-events", "none");
 
 
       legend.append('text')
         .attr('x', function (d, i) { return (i * 10) + margin.left + 15; })
         .attr('y', -5)
-        .text(function (d) { return d; });
+        .text(function (d) { return d; }).attr("pointer-events", "none");
 
 
     })
@@ -391,7 +391,7 @@ function AP_stuff(max, data, time) {
     .padding(0.5);
 
   var brush = d3.brushX()
-    .extent([[margin2.left, margin.top], [width2 - margin2.left - margin2.right, height + margin.top + 3]])
+    .extent([[margin2.left, margin.top], [width2 - margin2.left+margin2.right, height + margin.top + 3]])
     .on("start brush end", brushed)
     //.on("end.snap", brushended);
     .on("end", brushEnd);
@@ -515,14 +515,15 @@ function AP_stuff(max, data, time) {
       d3.select(this).classed("mouseover", true);
       var x = d3.select(this).data();
       d3.select("[id='" + x + "']").classed("mouseover", true);
+	  d3.select("[id=nameDisplay]").text(tickData[x]).attr("opacity", 100);
     })
     .on('mouseout', function (d) {
       d3.select(this).classed("mouseover", false);
       var x = d3.select(this).data();
       d3.select("[id='" + x + "']").classed("mouseover", false);
+	  d3.select("[id=nameDisplay]").attr("opacity", 0);
     });
 
-  console.log()
 
   svg.append("g")
     .attr("font-family", "var(--sans-serif)")
@@ -562,8 +563,10 @@ function TT_stuff() {
 
   var mymap = L.map('mapid', {
     center: [42.3514, -71.0969],
-    zoom: 13,
-    zoomControl: false
+	zoomSnap: .01,
+    zoom: 13.6,
+    zoomControl: false,
+	scrollWheelZoom: false
   });
 
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
@@ -641,7 +644,7 @@ function TT_stuff() {
     var line = d3.line()
       .x(function (d) { return mapPointX(d); })
       .y(function (d) { return mapPointY(d); })
-      .curve(d3.curveMonotoneX);
+      .curve(d3.curveCardinal.tension(.5));
 
     svg.append("path")
       .data([d])
@@ -657,7 +660,7 @@ function TT_stuff() {
       .attr('fill', '#b7dcff')*/
 
     svg.append('rect')
-      .attr('x', 150)
+      .attr('x', 120)
       .attr('y', 525)
       .attr('width', 210)
       .attr('height', 20)
@@ -665,7 +668,8 @@ function TT_stuff() {
       .attr('fill', '#b7dcff')
 
     var nameDisplay = svg.append('text')
-      .attr('x', 165)
+	  .attr("id","nameDisplay")
+      .attr('x', 125)
       .attr('y', 540)
       .style("font-size", 12);
 
@@ -685,7 +689,6 @@ function TT_stuff() {
         var x = d3.select(this).data().map(d => d.id);
         console.log(x);
         nameDisplay.text(d3.select(this).data().map(d => d.name)).attr("opacity", 100);
-        console.log(stopName)
         d3.selectAll("[sort='" + x + "']").classed("mouseover", true);
       })
       .on('mouseout', function (d) {
