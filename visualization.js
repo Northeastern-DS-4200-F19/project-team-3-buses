@@ -494,7 +494,7 @@ function AP_stuff(max, data, time) {
       .attr("y", margin.top + 48)
       .attr("text-anchor", "middle")
       .style("font-size", "14px")
-      .text("Bus Lane: " + buslane_sum + " mins").attr("pointer-events", "none")
+      .text("Added Bus-Only Lane: " + buslane_sum + " mins").attr("pointer-events", "none")
       .attr("font-weight", "bold")
       .attr("fill", "#1c0fd4");
   }
