@@ -11,11 +11,11 @@
 		<link rel="stylesheet" href="style.css">
     
     <!-- Favicons -->
-    <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
-    <link rel="manifest" href="/favicons/site.webmanifest">
-    <link rel="shortcut icon" href="/favicons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+    <link rel="manifest" href="favicons/site.webmanifest">
+    <link rel="shortcut icon" href="favicons/favicon.ico">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
    crossorigin=""/>
@@ -23,7 +23,7 @@
    integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og=="
    crossorigin=""></script>
     <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="msapplication-config" content="/favicons/browserconfig.xml">
+    <meta name="msapplication-config" content="favicons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
@@ -81,8 +81,6 @@
 
       <h1>Visualization explanation</h1>
       
-      <p><em>final visualization screenshots (PNG images), design justifications, UI walk-through, and linked presentation slides.</em></p>
-
 	  <p>The main aspect of our visualizations are the three distinct delay timings shown. The Current delay shows what delays a person can expect on any average day. The Low Traffic aspect shows what delays a person can expect if they get lucky and are travelling during the lowest times of traffic. Finally, the Bus Lane aspect shows what a person can expect if there was a dedicated bus lane on Route 1.
 
 	  The line chart allows for the user to explore the time of day where delays affect the user the most. The grouped bar chart allows for further exploration about where exactly the delays exist and where the most traffic is. The map allows for the user to easily interact with our visualizations and select the stops most relevant for them. The selection of stops will then change the grouped bar chart to show the total additional delays one can expect when travelling between those stops.</p>
@@ -90,9 +88,7 @@
 
 
       <h1>Data Analysis</h1>
-	  
-	  <p><em>Expectation: Data sources match the problem statement and are appropriate. These descriptions should be very explicit so someone could read your page and properly reproduce your results.</em></p>
-		 
+	  		 
 	  <p>We used two main spreadsheets as sources for our data. This first spreadsheet is called the "On Time Performance" sheet. The On Time Performance spreadsheet generally describes the on-time performance of different bus routes over time. We focused on the average on-time performance (or the average amount of times the bus worked on-time) of the bus route. 
 
 	  The second spreadsheet is called the "Segment Level Delay Analysis" spreadsheet. The Segment Level Delay Analysis spreadsheet describes different run time data for the bus at different stops, such as the median run time and delays the bus faces. This data was collected through statistical measurements and a dedicated study.
@@ -107,12 +103,6 @@
 
       <h1>Design Process</h1>
       
-      <p><em>Sketches and design choices to justify final visualization.</em></p>
-
-      <p><em>Expectation: Evidence of iterative improvement.
-      Logical discussion of design choices grounded in theory from course.
-      Discusses feedback from usability testing.</em></p>
-
 	  <p>After exploring our data and thinking about the task analysis and user needs, our design process started with three sketches from each group member. These sketches varied greatly, but we found that our favorites were straightforward designs that clearly showed the benefit of the bus lane. We also agreed that a map of some sort with the route and bus stops shown was necessary for our final visualization.
 
 	  We then moved onto combining our ideas into a prototype interactive design. This is where we decided on incorporating a map, a grouped bar chart, and a line chart. After receiving feedback, we decided to change our color scheme to increase the clarity of our designs and improve the aesthetics. We also ensured that our designs would be clear if they were in black and white, and that colors could still be differentiated by the color blind. Further feedback from a user allowed us to refine our approach to emphasize the benefits that would come specifically from the bus lane.</p>
@@ -120,15 +110,10 @@
 
       <h1>Conclusion</h1>
 
-      <p><em>Short summary of work completed and areas for improvement/future-work.</em></p>
-      
-      <p><em>Expectation: Meaningfully wraps up project and has good future directions.</em></p>
-		
+     		
 	  <p>Overall, we have created three distinct visualizations that all work in conjunction to clearly outline the benefits for bus riders if a bus lane was put in along Route 1. Currently, we only have data for northbound riders, so including southbound data and a toggle switch for the map could be introduced to improve the usefulness of the visualizations. In the future, more data can always be collected to keep the visualization up to date if levels of traffic within the city change drastically. The visualization can also be updated with other bus routes to allow a user to see possible benefits to public transportation throughout the city.</p>
       
       <h1>Acknowledgements</h1>
-
-      <p><em>List here where any code, packages/libraries, text, images, designs, etc. that you leverage come from.</em></p>
       
       <ul>
         <li><a href="https://d3js.org/">D3: Data-Driven Documents</a> by Mike Bostock.</li>

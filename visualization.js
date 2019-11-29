@@ -1,12 +1,13 @@
 
 
-function JD_stuff() {
+function barchart() {
+
+  //Set time formats
+  let formatTime = d3.timeFormat("%-I %p")
+  let parseAll = d3.timeParse("%I:00 %p")
+  let parseSingle = d3.timeParse("%I %p")
 
   // Load data first
-  var formatTime = d3.timeFormat("%-I %p")
-  var parseAll = d3.timeParse("%I:00 %p")
-  var parseSingle = d3.timeParse("%I %p")
-
   Promise.all([
     d3.csv('data/RoundTripData.csv', function (d) {
       return {
@@ -32,42 +33,41 @@ function JD_stuff() {
       data = files[0];
       data2 = files[1].filter(function (d) { return d.direction == "Northbound"; });
 
-
       // Set bounds	
-      var width = 1000;
-      var height = 225;
-      var margin = {
+      let width = 1000;
+      let height = 225;
+      let margin = {
         top: 50,
         bottom: 50,
         left: 40,
         right: 50
       };
 
+	  //Set colors
+      let color = d3.scaleOrdinal().range([d3.rgb(183, 220, 255), d3.rgb(104, 150, 255), d3.rgb(28, 15, 212)]);
 
-      var color = d3.scaleOrdinal().range([d3.rgb(183, 220, 255), d3.rgb(104, 150, 255), d3.rgb(28, 15, 212)]);
-
-      var svg = d3.select('#main-svg');
+      let svg = d3.select('#main-svg');
 
       // Start group	
-      var lineChartGroup = svg
+      let lineChartGroup = svg
         .append('g')
         .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
 
 
       // X Scale
-      var lineXScale = d3.scalePoint()
+      let lineXScale = d3.scalePoint()
         .domain(data.map(function (d) {
           return d.time;
         }))
         .range([0, width - margin.left - margin.right]);
 
       // Y Scale
-      var lineYScale = d3.scaleLinear()
+      let lineYScale = d3.scaleLinear()
         .domain([0, d3.max(data, function (d) { return Math.max(d.buslane, d.current, d.lowtraffic); }) + 10])
         .range([height - margin.bottom - margin.top, 0]);
 
       // X Axis
-      var lineXAxis = d3.axisBottom(lineXScale);
+      let lineXAxis = d3.axisBottom(lineXScale);
       lineChartGroup.append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + (height - margin.bottom - margin.top) + ')')
@@ -82,7 +82,7 @@ function JD_stuff() {
         .attr("pointer-events", "none");
 
       // Y Axis
-      var lineYAxis = d3.axisLeft(lineYScale);
+      let lineYAxis = d3.axisLeft(lineYScale);
       lineChartGroup.append('g')
         .attr('class', 'y axis')
         .attr('transform', 'translate(0, 0)')
@@ -108,21 +108,19 @@ function JD_stuff() {
         .attr("text-anchor", "middle")
         .style("font-size", "16px")
         .style("font-weight", "bold")
-        .text("Total Travel Times Between All Outbound Route 1 Bus Stops")
+        .text("Total Travel Times Between All Route 1 Bus Stops (Dudley -> Harvard)")
         .attr("pointer-events", "none");
 
-
-
       // Make Lines
-      var busLaneLine = d3.line()
+      let busLaneLine = d3.line()
         .x(function (d) { return lineXScale(d.time); })
         .y(function (d) { return lineYScale(d.buslane); })
 
-      var currentTimeLine = d3.line()
+      let currentTimeLine = d3.line()
         .x(function (d) { return lineXScale(d.time); })
         .y(function (d) { return lineYScale(d.current); })
 
-      var lowTrafficLine = d3.line()
+      let lowTrafficLine = d3.line()
         .x(function (d) { return lineXScale(d.time); })
         .y(function (d) { return lineYScale(d.lowtraffic); })
 
@@ -139,12 +137,14 @@ function JD_stuff() {
 
 
       // Get Default Hour
-      var presentDay = new Date();
-      var presentTime = presentDay.toLocaleString('en-US', { hour: 'numeric', hour12: true })
+      let presentDay = new Date();
+      let presentTime = presentDay.toLocaleString('en-US', { hour: 'numeric', hour12: true })
       if (Number(presentTime.split(" ")[0]) > 1 && Number(presentTime.split(" ")[0]) < 5 && presentTime.split(" ")[1] == "AM") {
         presentTime = "5 AM"
       }
 
+	
+	  //Make whole line chart area clickable
       lineChartGroup.append('g').append('rect')
         .attr("x", -lineXScale.step() / 2)
         .attr("y", 0)
@@ -155,7 +155,7 @@ function JD_stuff() {
 
 
       // Set up Brush
-      var lineBrush = d3.brushX()
+      let lineBrush = d3.brushX()
         .extent([[-lineXScale.step() / 2, 0], [width - margin.left - margin.right + lineXScale.step() / 2, height - margin.bottom - margin.top / 2]])
         .on('end', lineBrushEnded);
 
@@ -170,32 +170,35 @@ function JD_stuff() {
         ]);
 
 
-      var filtered_data2 = data2.filter(function (d) { return d.Stop2 != ""; });
-      var max = d3.max(filtered_data2, function (d) { return Math.max(d.buslane, d.lowtraffic, d.current); });
+	  //Set up initial time and initial bar graph
+      let filtered_data2 = data2.filter(function (d) { return d.Stop2 != ""; });
+      let max = d3.max(filtered_data2, function (d) { return Math.max(d.buslane, d.lowtraffic, d.current); });
 
 
-      AP_stuff(max, data2.filter(function (d) { return d.time == formatTime(parseSingle(presentTime)); }), formatTime(parseSingle(presentTime)), 0, 0);
+      linechart(max, data2.filter(function (d) { return d.time == formatTime(parseSingle(presentTime)); }), formatTime(parseSingle(presentTime)), 0, 0);
 
-
+	
+	  //Click to move brush
       lineChartGroup.on("mousedown", function () {
-        var coords = d3.mouse(this);
+        let coords = d3.mouse(this);
         xcoord = coords[0];
         lineChartGroup.select('.brush').call(lineBrush.move, [xcoord - lineXScale.step() / 2, xcoord + lineXScale.step() / 2]).call(lineBrushEnded);
       })
 
-
+	  //Helper function for brush snapping
       function invertPoint(selection) {
-        var xPos = selection;
+        let xPos = selection;
         if (selection == width - margin.right - margin.left) {
           return "1 AM"
         }
-        var domain = lineXScale.domain();
-        var range = lineXScale.range();
-        var rangePoints = d3.range(range[0], range[1], lineXScale.step())
-        var yPos = domain[d3.bisectRight(rangePoints, xPos) - 1];
+        let domain = lineXScale.domain();
+        let range = lineXScale.range();
+        let rangePoints = d3.range(range[0], range[1], lineXScale.step())
+        let yPos = domain[d3.bisectRight(rangePoints, xPos) - 1];
         return yPos;
       }
 
+	  //Brush ends and redraws bar chart
       function lineBrushEnded() {
         const selection = d3.event.selection;
         if (!d3.event.sourceEvent || !selection) return;
@@ -206,9 +209,10 @@ function JD_stuff() {
         d3.select("#BSH-svg").html(null);
         time = formatTime(parseSingle(invertPoint((x1 + x0) / 2)))
 
-        AP_stuff(max, data2.filter(function (d) { return d.time == time; }), time)
+        linechart(max, data2.filter(function (d) { return d.time == time; }), time)
       }
-
+	  
+	  //Lock brush size
       svg.selectAll('.brush>.handle').remove();
       svg.selectAll('.brush>.overlay').remove();
       lineChartGroup.selectAll('.overlay').style('pointer-events', 'click');
@@ -217,7 +221,7 @@ function JD_stuff() {
 
       // Set up Legend
 
-      var legend = lineChartGroup.selectAll('.legend')
+      let legend = lineChartGroup.selectAll('.legend')
         .data(["Normal Traffic", "Low Traffic", "Added Bus-Only Lane"])
         .enter()
         .append('g')
@@ -243,11 +247,11 @@ function JD_stuff() {
     })
 };
 
-function AP_stuff(max, data, time) {
+function linechart(max, data, time) {
 
 
-
-  var svg = d3.select("#BSH-svg"),
+  //Set Bounds
+  let svg = d3.select("#BSH-svg"),
     margin = { top: 50, right: 20, bottom: 100, left: 40 },
     width = 1000 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom,
@@ -256,40 +260,44 @@ function AP_stuff(max, data, time) {
       bottom: 50,
       left: 40,
       right: 0
-    }
-  width2 = 1000
-  height2 = 100
+    },
+    width2 = 1000,
+    height2 = 100,
 
+  //Set svg and have ability to reset highlight
   g = svg.append("g").attr("transform", "translate(" + (margin.left) + "," + margin.top + ")").on('mousedown', function () { circles.classed("selectedPoint", false).attr("fill", "white") });
 
+  //Get tick labels ready
   tickData = data.map(function (d) { return d.Stop1 });
 
 
-  // The scale spacing the groups:
-  var x0 = d3.scaleBand()
+  //X Scale spacing the groups
+  let x0 = d3.scaleBand()
     .rangeRound([(margin.left - 22), width])
     .paddingInner(0.1);
 
 
-
-  // The scale for spacing each group's bar:
-  var x1 = d3.scaleBand()
+  //X Scale for spacing each group's bar
+  let x1 = d3.scaleBand()
     .padding(0.05);
 
-  var y = d3.scaleLinear()
+  //Y Scale
+  let y = d3.scaleLinear()
     .rangeRound([height, 0]);
 
-  var z = d3.scaleOrdinal()
+  //Color Scale
+  let z = d3.scaleOrdinal()
     .range(["#b7dcff", "#6896eb", "#1c0fd4"]);
 
+  //Grouping variables
+  let keys = ["current", "lowtraffic", "buslane"];
 
-  var keys = ["current", "lowtraffic", "buslane"];
-
+  //Setting domains
   x0.domain(data.map(function (d) { return d.sort; }));
   x1.domain(keys).rangeRound([0, x0.bandwidth()]);
   y.domain([0, max]).nice();
 
-
+  //X Axis
   g.append("g")
     .attr("class", "axis")
     .attr("transform", "translate(-19," + (height) + ")")
@@ -302,8 +310,7 @@ function AP_stuff(max, data, time) {
     .style("text-anchor", "start")
     .attr("pointer-events", "none");
 
-
-
+  //Y Axis
   g.append("g")
     .attr("class", "y axis")
     .call(d3.axisLeft(y).ticks(null, "s"))
@@ -312,7 +319,6 @@ function AP_stuff(max, data, time) {
     .attr("y", y(y.ticks().pop()) + 1)
     .attr("dy", "0.32em")
     .attr("fill", "#000")
-    //.attr("font-weight", "bold")
     .style("font-size", "12px")
     .attr("text-anchor", "start")
     .attr("transform", "rotate(-90)")
@@ -323,6 +329,7 @@ function AP_stuff(max, data, time) {
     .text("Travel Time (sec)")
     .attr("pointer-events", "none");
 
+  //Bars
   g.append("g")
     .selectAll("g")
     .data(data)
@@ -339,10 +346,10 @@ function AP_stuff(max, data, time) {
     .attr("height", function (d) { return height - y(0); })
     .attr("fill", function (d) { return z(d.key); });
 
+  //Bar Animations
   g.selectAll("rect")
     .transition()
     .delay(function (d) { return Math.random() * 500; })
-    //.delay(function (d) {return height - y(d.value);})
     .duration(500)
     .attr("y", function (d) { return y(d.value); })
     .attr("height", function (d) { return height - y(d.value); });
@@ -355,15 +362,15 @@ function AP_stuff(max, data, time) {
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
     .style("font-weight", "bold")
-    .text("Travel Times Between Outbound Route 1 Bus Stops at " + time);
+    .text("Travel Times Between Route 1 Bus Stops at " + time + " (Dudley -> Harvard)");
 
 
   // Set up Legend
 
-  var color = d3.scaleOrdinal().range([d3.rgb(183, 220, 255), d3.rgb(104, 150, 255), d3.rgb(28, 15, 212)]);
+  let color = d3.scaleOrdinal().range([d3.rgb(183, 220, 255), d3.rgb(104, 150, 255), d3.rgb(28, 15, 212)]);
 
 
-  var legend = svg.selectAll('.legend')
+  let legend = svg.selectAll('.legend')
     .data(["Normal Traffic", "Low Traffic", "Added Bus-Only Lane"])
     .enter()
     .append('g')
@@ -379,24 +386,27 @@ function AP_stuff(max, data, time) {
     .attr('height', 10)
     .style('fill', color);
 
-
   legend.append('text')
     .attr('x', function (d, i) { return (i * 10) + margin.left + 15; })
     .attr('y', margin.top)
     .text(function (d) { return d; });
 
+ //Create stop selector
+ 
+ //Set up scale
   x = d3.scalePoint()
     .domain(d3.range(0, 25, 1))
     .range([margin2.left + x0.bandwidth() / 2, width2 - margin2.left + x0.bandwidth() / 2 + 6])
     .padding(0.5);
 
-  var brush = d3.brushX()
+//Set up brush
+  let brush = d3.brushX()
     .extent([[margin2.left, margin.top], [width2 - margin2.left+margin2.right, height + margin.top + 3]])
     .on("start brush end", brushed)
-    //.on("end.snap", brushended);
     .on("end", brushEnd);
 
-  var line = svg.append("g")
+//Set up line between stops
+  let line = svg.append("g")
     .append("line")
     .style("stroke", "black")
     .attr("x1", margin2.left + x.step() / 2)
@@ -407,22 +417,20 @@ function AP_stuff(max, data, time) {
 
 
   function brushed() {
-    var selection = d3.event.selection;
-
+    let selection = d3.event.selection;
+	
     if (d3.event.selection === null) return;
     const [a0, a1] = d3.event.selection;
-    console.log([a0, a1])
 
-    // If within the bounds of the brush, select it
     circles.classed("selectedPoint", d =>
       a0 <= x(d) - x.step() / 2 && x(d) - x.step() / 2 <= a1
     );
 
+    //Update map
     brushedStops = d3.set(svg.selectAll(".selectedPoint").data());
-
     dispatcher.call("selectionUpdatedBar", this, svg.selectAll(".selectedPoint").data());
-
-
+	
+    //Update sum text
     makeSumText(svg.selectAll(".selectedPoint").data());
   }
 
@@ -439,35 +447,35 @@ function AP_stuff(max, data, time) {
   g.append("text").attr("id", "buslane_sum")
 
 
+//Make text showing time sums between stops
 
   function makeSumText(data_slice) {
-    var selected_stops = data.filter(function (d) { return data_slice.includes(d.sort) && data_slice.includes(d.sort + 1) });
-    var current_sum = Math.round(100 * d3.sum(selected_stops, function (d) { return d.current }) / 60) / 100;
-    var lowtraffic_sum = Math.round(100 * d3.sum(selected_stops, function (d) { return d.lowtraffic }) / 60) / 100;
-    var buslane_sum = Math.round(100 * d3.sum(selected_stops, function (d) { return d.buslane }) / 60) / 100;
+    let selected_stops = data.filter(function (d) { return data_slice.includes(d.sort) && data_slice.includes(d.sort + 1) });
+    let current_sum = Math.round(100 * d3.sum(selected_stops, function (d) { return d.current }) / 60) / 100;
+    let lowtraffic_sum = Math.round(100 * d3.sum(selected_stops, function (d) { return d.lowtraffic }) / 60) / 100;
+    let buslane_sum = Math.round(100 * d3.sum(selected_stops, function (d) { return d.buslane }) / 60) / 100;
 
     if (data_slice.length < 2) {
       current_sum = 0;
       lowtraffic_sum = 0;
       buslane_sum = 0;
     }
-
+	
+	
     if (data_slice.length == 25) {
-      d3.select("#sum_title")
-        .attr("x", width / 4)
-        .attr("y", margin.top)
-        .attr("text-anchor", "middle")
-        .style("font-size", "16px")
-        .text("Sum of Times Between All Outbound Stops: ").attr("pointer-events", "none");
+      	title_text = "Sum of Times Between All Stops: ";
     }
     else {
-      d3.select("#sum_title")
-        .attr("x", width / 4)
-        .attr("y", margin.top)
-        .attr("text-anchor", "middle")
-        .style("font-size", "16px")
-        .text("Sum of Times Between Selected Outbound Stops: ").attr("pointer-events", "none");
-    }
+		title_text = "Sum of Times Between Selected Stops: ";
+	}
+		
+    d3.select("#sum_title")
+	  .attr("x", width / 4)
+	  .attr("y", margin.top)
+	  .attr("text-anchor", "middle")
+	  .style("font-size", "16px")
+	  .text(title_text).attr("pointer-events", "none");
+    
 
     d3.select("#current_sum")
       .attr("x", width / 4)
@@ -477,7 +485,7 @@ function AP_stuff(max, data, time) {
       .text("Normal Traffic: " + current_sum + " mins").attr("pointer-events", "none")
       .attr("font-weight", "bold")
       .attr("stroke", "black")
-      .attr("stroke-width", ".35px")
+      .attr("stroke-width", ".2px")
       .attr("fill", "#b7dcff");
 
     d3.select("#lowtraffic_sum")
@@ -499,8 +507,8 @@ function AP_stuff(max, data, time) {
       .attr("fill", "#1c0fd4");
   }
 
-
-  var circles = svg.append("g")
+  //Make circles for each stop, and give them mouseover functionality. Updates the map as well.
+  let circles = svg.append("g")
     .selectAll("circle")
     .data(x.domain())
     .enter()
@@ -513,22 +521,40 @@ function AP_stuff(max, data, time) {
     .attr("sort", d => x.domain()[d])
     .on('mouseover', function () {
       d3.select(this).classed("mouseover", true);
-      var x = d3.select(this).data();
+      let x = d3.select(this).data();
       d3.select("[id='" + x + "']").classed("mouseover", true);
 	  d3.select("[id=nameDisplay]").text(tickData[x]).attr("opacity", 100);
+	  
+	  coords = [0,0]
+	  coords[0] = d3.select("[id='" + x + "']").attr("cx");
+	  coords[1] = d3.select("[id='" + x + "']").attr("cy");
+	  name = d3.select("[id='" + x + "']").attr("name");
+	  
+	  console.log(x)
+	  if (x < 15){
+	    nameBoxLoc = coords[0]-170
+	  }
+	  else{
+		nameBoxLoc = coords[0]-40
+	  }
+		
+	  d3.select("#nameBox").attr("opacity", 100).attr("x", nameBoxLoc).attr("y", coords[1]-30).raise();		
+      d3.select("#nameDisplay").text(name).attr("opacity", 100).attr("x", nameBoxLoc+105 ).attr("y", coords[1]-15).raise();
+	  
     })
     .on('mouseout', function (d) {
       d3.select(this).classed("mouseover", false);
-      var x = d3.select(this).data();
+      let x = d3.select(this).data();
       d3.select("[id='" + x + "']").classed("mouseover", false);
-	  d3.select("[id=nameDisplay]").attr("opacity", 0);
+	  d3.select("#nameDisplay").attr("opacity", 0);
+	  d3.select("#nameBox").attr("opacity", 0);
     });
 
 
   svg.append("g")
-    .attr("font-family", "var(--sans-serif)")
+    .attr("font-family", "let(--sans-serif)")
     .attr("text-anchor", "middle")
-    .attr("transform", `translate(${x.step() / 2},${height / 2})`)
+    .attr("transform", "translate(" + (x.step() / 2) + ","+(height / 2)+")")
     .selectAll("text")
     .data(x.domain());
 
@@ -538,15 +564,16 @@ function AP_stuff(max, data, time) {
     .style("opacity", ".5")
     .call(brush).lower();
 
-
-  console.log(brushedStops.values().map(Number))
-
+  
+  //Update map
   circles.classed("selectedPoint", d =>
     brushedStops.values().map(Number).includes(d)
   );
 
+  //Update sum text
   makeSumText(svg.selectAll(".selectedPoint").data());
-
+ 
+  //Get map updates
   dispatcher.on("selectionUpdatedMap", function (selected_ids) {
     circles.classed("selectedPoint", d =>
       selected_ids.includes(d)
@@ -555,13 +582,15 @@ function AP_stuff(max, data, time) {
   })
 }
 
-function TT_stuff() {
+function routemap() {
 
 
-  var width = 600;
-  var height = 600;
+  //Set bounds
+  let width = 600;
+  let height = 600;
 
-  var mymap = L.map('mapid', {
+  //Create map
+  let mymap = L.map('mapid', {
     center: [42.3514, -71.0969],
 	zoomSnap: .01,
     zoom: 13.6,
@@ -569,6 +598,7 @@ function TT_stuff() {
 	scrollWheelZoom: false
   });
 
+  //Set initial map
   L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
     maxZoom: 18,
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -582,38 +612,40 @@ function TT_stuff() {
   mymap.scrollWheelZoom.disable();
   mymap.dragging.disable();
 
-  var svg = d3.select(mymap.getPanes().overlayPane).append("svg").attr("width", width).attr("height", height);
+  let svg = d3.select(mymap.getPanes().overlayPane).append("svg").attr("width", width).attr("height", height);
 
+  //Import data
   d3.json("data/outboundStops.json").then(function (d) {
 
+	//Convert between screen locations and latitude/longitude
     function mapPointX(d) {
       d.LatLng = new L.LatLng(d.latitude, d.longitude)
-      var x = mymap.latLngToLayerPoint(d.LatLng).x;
+      let x = mymap.latLngToLayerPoint(d.LatLng).x;
       return x;
     };
 
     function mapPointY(d) {
       d.LatLng = new L.LatLng(d.latitude, d.longitude)
-      var y = mymap.latLngToLayerPoint(d.LatLng).y;
+      let y = mymap.latLngToLayerPoint(d.LatLng).y;
       return y;
     };
 
-    var mapBrush = d3.brush()
+	//Create brush
+    let mapBrush = d3.brush()
       .extent([[0, 0], [width, height]]).on("start brush", brushed)
       .on("end", brushEnd);
 
     svg.append("g").call(mapBrush);
 
-
-
+	//Highlighting and updating points
     function brushed() {
-      var selected = d3.event.selection;
+	  if (d3.event.selection === null) return;
+      let selected = d3.event.selection;
       graphPoints.classed("selectedPoint", function (d) {
         if (isBrushed(selected, mapPointX(d), mapPointY(d))) {
           if (!brushedStops.has(this.id)) {
             brushedStops.add(this.id);
             d3.select(this).attr("selectedPoint", "true");
-            //d3.select(this).attr("fill","orange");
           }
         }
 
@@ -626,7 +658,8 @@ function TT_stuff() {
         }
         return isBrushed(selected, mapPointX(d), mapPointY(d))
       }
-      );
+      )
+	  //Update bar chart
       dispatcher.call("selectionUpdatedMap", this, brushedStops.values().map(Number));
     }
 
@@ -641,7 +674,8 @@ function TT_stuff() {
       }
     }
 
-    var line = d3.line()
+	//Create line between stops
+    let line = d3.line()
       .x(function (d) { return mapPointX(d); })
       .y(function (d) { return mapPointY(d); })
       .curve(d3.curveCardinal.tension(.5));
@@ -651,30 +685,28 @@ function TT_stuff() {
       .attr("d", line)
       .attr("class", "line");
 
-    /*svg.append('rect')
-      .attr('x', d3.event.pageX)
-      .attr('y', d3.event.pageY)
-      .attr('width', 175)
-      .attr('height', 20)
-      .attr('stroke', 'black')
-      .attr('fill', '#b7dcff')*/
-
-    svg.append('rect')
-      .attr('x', 80)
-      .attr('y', 525)
+	//Create details on demand box
+    let nameBox = svg.append('rect')
+	  .attr("id", "nameBox")
+      //.attr('x', 80)
+     // .attr('y', 525)
       .attr('width', 210)
       .attr('height', 20)
       .attr('stroke', 'black')
       .attr('fill', '#b7dcff')
+	  .attr("opacity", 0)
+	  .attr("pointer-events", "none");
 
-    var nameDisplay = svg.append('text')
+    let nameDisplay = svg.append('text')
 	  .attr("id","nameDisplay")
-      .attr('x', 185)
-      .attr('y', 540)
+     // .attr('x', 185)
+     // .attr('y', 540)
       .style("text-anchor", "middle")
-      .style("font-size", 12);
+      .style("font-size", 12)
+	  .attr("pointer-events", "none");
 
-    var graphPoints = svg.selectAll("circle")
+    //Make circles for each stop, and give them mouseover functionality. Updates the bar chart as well.
+    let graphPoints = svg.selectAll("circle")
       .data(d)
       .enter()
       .append("circle")
@@ -687,21 +719,36 @@ function TT_stuff() {
       .attr("stroke", "black")
       .on('mouseover', function () {
         d3.select(this).classed("mouseover", true)
-        var x = d3.select(this).data().map(d => d.id);
-        console.log(x);
-        nameDisplay.text(d3.select(this).data().map(d => d.name)).attr("opacity", 100);
-        d3.selectAll("[sort='" + x + "']").classed("mouseover", true);
+        let ID = d3.select(this).data().map(d => d.id);
+		
+		coords = [0,0];
+		coords[0] = d3.select(this).attr("cx");
+		coords[1] = d3.select(this).attr("cy");
+		
+		if (ID < 15){
+			nameBoxLoc = coords[0]-170
+		}
+		else{
+			nameBoxLoc = coords[0]-40
+		}
+		
+		nameBox.attr("opacity", 100).attr("x", nameBoxLoc).attr("y", coords[1]-30).raise();		
+        nameDisplay.text(d3.select(this).data().map(d => d.name)).attr("opacity", 100).attr("x", nameBoxLoc+105 ).attr("y", coords[1]-15).raise();
+		
+        d3.selectAll("[sort='" + ID + "']").classed("mouseover", true);
       })
       .on('mouseout', function (d) {
         d3.select(this).classed("mouseover", false)
-        var x = d3.select(this).data().map(d => d.id);
-        d3.selectAll("[sort='" + x + "']").classed("mouseover", false);
+        let ID = d3.select(this).data().map(d => d.id);
+        d3.selectAll("[sort='" + ID + "']").classed("mouseover", false);
         nameDisplay.attr("opacity", 0);
+		nameBox.attr("opacity", 0);
+
       })
       .on('mousedown', function () { graphPoints.classed("selectedPoint", false).attr("fill", "white") })
       .raise();
 
-
+	//Update bar chart
     dispatcher.on("selectionUpdatedBar", function (selected_ids) {
       graphPoints.classed("selectedPoint", d =>
         selected_ids.includes(parseInt(d.id, 10))
@@ -712,10 +759,12 @@ function TT_stuff() {
   })
 }
 
+//Create line/bar charts
+barchart();
 
-JD_stuff();
+//Create map
+routemap()
 
-TT_stuff()
+//Global variables for brushing/linking
 var brushedStops = d3.set();
-
 var dispatcher = d3.dispatch("selectionUpdatedMap", "selectionUpdatedBar");

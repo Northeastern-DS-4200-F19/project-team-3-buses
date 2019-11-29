@@ -93,7 +93,7 @@ lowTrafficLine{
 	font-weight:bold;
 	padding:5px 40px;
 	font-size:1rem;
-	line-height:2rem;
+	line-height:1.4rem;
 	position:relative;
 	transition:0.5s;
 }
@@ -115,7 +115,7 @@ lowTrafficLine{
 	bottom:1px;
 	top:auto;
 }
-@media screen and (min-width:800px){
+@media screen and (min-width:1000px){
 	#forkongithub{
 		position:fixed;
 		display:block;
