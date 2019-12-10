@@ -89,15 +89,15 @@
       <h1>Visualization explanation</h1>
   
 	  <p>The main aspect of our visualizations are the three distinct delay timings shown. The Normal Traffic scenario what delays a person can expect on any average day. 
-      The Low Traffic aspect shows what delays a person can expect if they get lucky and are travelling during the lowest times of traffic. 
+      The Low Traffic aspect shows what delays a person can expect if they are fortunate enough to travel during times with lower than average traffic. 
       Finally, the Added Bus-Only Lane aspect shows what a person can expect if there was a dedicated bus lane on Route 1. </p>
       <img src ="files/lineVis.png" alt="lineGraph" width="85%" height="85%" class="center">
       <p>The line chart allows for the user to explore the time of day where delays affect the user the most. A line chart was chosen as the idiom, because it easily shows how the delay level changes over time. 
-      This easily shows important information such as peaks in delays and allows for interactive aspect in changing the time. The grouped bar chart allows for further exploration about where exactly the delays exist and where the most traffic is. </p>
+      This easily shows important information such as peaks in delays and allows for the interactive aspect of changing the time. The grouped bar chart allows for further exploration about where exactly the delays exist and where the most traffic is. </p>
       <img src ="files/barVis.png" alt="barChart" width="85%" height="85%" class="center">
       <p>
-      The grouped bar chart was selected because the length of the bars allows for differences to be clearly seen between the three scenarios. The map allows for the user to easily interact with our visualizations and select the stops most relevant for them. 
-      The selection of stops will then change the grouped bar chart to show the total additional delays one can expect when travelling between those stops. </p>
+      The grouped bar chart was selected because the length of the bars allows for differences to be clearly seen between the three scenarios. The map allows for the user to easily interact with our visualizations and select the stops most relevant to them. 
+      The selection of stops will then change the grouped bar chart to show the total additional delays one can expect when traveling between those stops. </p>
       <img src ="files/mapVis.png" alt="mapVisualization" width="50%" height="50%" class="center">
       <p>
       The map allows for the user to add context throughout their exploration of the visualization, since most people do not know all the streets in Boston.
@@ -109,17 +109,17 @@
 	  <p>We used two main spreadsheets as sources for our data. This first spreadsheet is called the "On Time Performance" sheet. The On Time Performance spreadsheet generally describes the on-time performance of different bus routes over time. 
       We focused on the average on-time performance (or the average amount of times the bus worked on-time) of the bus route. The second spreadsheet is called the "Segment Level Delay Analysis" spreadsheet. 
       The Segment Level Delay Analysis spreadsheet describes different run time data for the bus at different stops, such as the median run time and delays the bus faces. 
-      This data was collected through statistical measurements and a dedicated study. The “Segment Level Delay Analysis” spreadsheet uses ordinal, categorical, and quantitative, data types. 
-      The “Ontime Performance” spreadsheet uses ordinal, categorical, and quantitative, data types as well. For data preprocessing, we mainly had to focus in on the bus stops that we actually wanted and ensured that the data was in the proper order. 
-      We also had to change the time format and the names of the bus stops so that it could be displayed easily on the axis of the grouped bar chart and the line chart. Finally, we had to ensure that the data was all for the northbound direction of the bus, which meant eliminating some extra rows on the spreadsheets.</p>
+      This data was collected through statistical measurements and a dedicated study. The “Segment Level Delay Analysis” spreadsheet uses ordinal, categorical, and quantitative data types. 
+      The “Ontime Performance” spreadsheet uses ordinal, categorical, and quantitative data types as well. For data preprocessing, we had to focus on the bus stops that we actually wanted and ensure that our data matched the order of stops. 
+      We also had to change the time format and the names of the bus stops so that they could be displayed easily on the axes of the grouped bar chart and the line chart. Finally, we had to ensure that the data only covered the northbound direction of the bus, which meant eliminating extra rows on the spreadsheets.</p>
 
       <h1>Task Analysis</h1>
 
 	  <p> The primary function of our visualization is to allow users to discover more about the Route 1 bus, and its possible improvements. Our main task was to show the predicted benefits of a "reliable" bus, by showing comparisons between different traffic scenarios. 
       Furthermore, we wanted to be able to have these visualizations be customizable, to allow users to select their own commutes on Route 1 and browse through the presented options to directly see the impact of a reliable bus personally. 
-      We had a secondary task of trying to determine which areas along the bus route were causing the most issues. For this, we wanted to clearly the user to be able to locate each bus stop, and discover which suffered from the largest delays. 
-      There was a third task, to show who was the main beneficiary of an added bus-only lane, but it became less of a focus as determined that it was more important to show that an added bus-only lane was beneficial for everyone who uses the Route 1 bus. 
-      However, exploration of this task was one of the reasons behind why we added a map, so that each individual user could have the context for if they lived close enough to the route for it to have an impact on their lives.</p>
+      We had a secondary task of trying to determine which areas along the bus route were causing the most issues. For this, we wanted to the user to be able to clearly locate each bus stop, and discover which suffered from the largest delays. 
+      There was a third task, to show who was the main beneficiary of an added bus-only lane, but it became less of a focus as it was determined that it was more important to show that an added bus-only lane was beneficial for everyone who uses the Route 1 bus. 
+      However, exploration of this task was one of the reasons why we added a map, so that each individual user could have the context for if they lived close enough to the route for it to have an impact on their lives.</p>
 
       <h1>Design Process</h1>
 
@@ -138,7 +138,7 @@
       <h1>Conclusion</h1>
 
      		
-	  <p>Overall, we have created three distinct visualizations that all work in conjunction to clearly outline the benefits for bus riders if a bus lane was put in along Route 1. These visualizations also clearly show that in its current state, the Route 1 bus is unreliable and suffers from a lot of delays. 
+	  <p>Overall, we have created three distinct visualizations that all work in conjunction to clearly outline the benefits for bus riders if a bus lane was constructed along Route 1. These visualizations also clearly show that in its current state, the Route 1 bus is unreliable and suffers from a lot of delays. 
       Even the low traffic scenarios show that the bus is unreliable and delayed, and that an added bus-only lane provides a much more reliable and efficient experience. We hope that these visualizations can be used by the Chester Square Neighborhood Association to help gather support and convince authorities that an added bus lane is very beneficial. 
       Our visualizations can always be improved in the future, and there are some ideas that we had that could not be implemented in time that could be helpful for the user. For example, we currently only have data for northbound riders, so including southbound data and a toggle switch for the map could be introduced to improve the usefulness of the visualizations. 
       In the future, more data can always be collected to keep the visualization up to date if levels of traffic within the city change drastically. The visualization can also be updated with other bus routes to allow a user to see possible benefits to public transportation throughout the city.</p>
